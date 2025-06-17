@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import '../ProfileDropdown.css';
 
-const ProfileDropdown = ({ user, onLogout }) => {
+const ProfileDropdown = ({ user }) => {
 
   const [showDropdown, setShowDropdown] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const dropdownRef = useRef();
   const roles = user?.role || [];
   console.log(roles);
@@ -21,7 +22,12 @@ const ProfileDropdown = ({ user, onLogout }) => {
       setShowDropdown(false);
     }
   };
-
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.reload();
+        navigate('/');
+      };
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -42,7 +48,7 @@ const ProfileDropdown = ({ user, onLogout }) => {
           <Link to="/profile">My Profile</Link>
           {roles.includes('guest') && <Link to="/bookings">Bookings</Link>}
           {roles.includes('host') && <Link to="/listings">Listings</Link>}
-          <button onClick={onLogout}>Logout</button>
+          <button onClick={handleLogout}>Logout</button>
         </div>
       )}
     </div>

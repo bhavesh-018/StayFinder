@@ -132,6 +132,7 @@ textarea.form-control {
 .site-navbar {
   position: fixed;
   display: none;
+  visibility: hidden;
   top: 0;
   left: 0;
   right: 0;

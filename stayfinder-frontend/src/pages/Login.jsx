@@ -21,7 +21,16 @@ const Login = () => {
   };
 
   return (
-    <div className="container mt-5" style={{ maxWidth: '400px' }}>
+     <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f8f9fa',
+      }}
+    >
+    <div className="container" style={{ maxWidth: '400px' }}>
       <h2 className="mb-3">Login</h2>
       {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleLogin}>
@@ -49,6 +58,7 @@ const Login = () => {
       <p className="mt-3 text-center">
         Don’t have an account? <Link to="/register">Create one</Link>
       </p>
+    </div>
     </div>
   );
 };

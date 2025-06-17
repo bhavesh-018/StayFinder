@@ -35,7 +35,16 @@ const Register = () => {
   };
 
   return (
-    <div className="container mt-5" style={{ maxWidth: '400px' }}>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f8f9fa',
+      }}
+    >
+    <div className="container" style={{ maxWidth: '400px' }}>
       <h2 className="mb-3">Register</h2>
       {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleSubmit}>
@@ -59,6 +68,7 @@ const Register = () => {
   Already a user? <Link to="/login">Login</Link>
 </p>
 
+    </div>
     </div>
   );
 };
