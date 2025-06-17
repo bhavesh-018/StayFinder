@@ -1,0 +1,66 @@
+.availability-overlay-wrapper {
+  position: absolute;
+  bottom: -60px; /* Adjust to make it overlap */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 15px;
+  z-index: 10;
+}
+
+.availability-form {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 2rem;
+}
+
+.label {
+  font-weight: 600;
+  color: #000;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.field-icon-wrap {
+  position: relative;
+}
+
+.field-icon-wrap .icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+}
+
+.field-icon-wrap input,
+.field-icon-wrap select {
+  padding-left: 35px;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: 45px;
+  padding: 6px 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+.btn-block {
+  width: 100%;
+  height: 45px;
+  background-color: #fbbf24;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.btn-block:hover {
+  background-color: #f59e0b;
+}

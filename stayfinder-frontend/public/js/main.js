@@ -165,7 +165,9 @@
     $('#m_time').timepicker();
   };
   dateAndTime();
-
+  
+console.log(typeof(jQuery))
+console.log($.fn.datepicker)
 
   var windowScroll = function() {
 
