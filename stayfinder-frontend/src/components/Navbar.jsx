@@ -3,6 +3,7 @@ import ProfileDropdown from './ProfileDropdown';
 
 const Navbar = () => {
   const location = useLocation();
+  const isHome = location.pathname === '/';
   const user = JSON.parse(localStorage.getItem('user'));
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
@@ -74,11 +75,11 @@ const Navbar = () => {
 
       `}</style>
 
-      <header className="site-header js-site-header">
+      <header className="site-header js-site-header" style={{ backgroundColor: isHome ? 'transparent' : '#fbbf24', transition: 'background 0.3s ease',  padding: isHome ? '3.5rem 0' : '2rem 0', }}>
         <div className="container-fluid">
           <div className="row align-items-center">
-            <div className="col-6 col-lg-4 site-logo" data-aos="fade">
-              <Link to="/">StayFinder</Link>
+            <div className="col-6 col-lg-4 site-logo" data-aos="fade" style={{ color: isHome ? 'white' : 'black', fontWeight: 'bold', fontSize: '22px' }}>
+              <Link to="/" style={{ color: isHome ? 'white' : 'black', textDecoration: 'none' }}>StayFinder</Link>
             </div>
 
             <div className="col-6 col-lg-8 d-flex justify-content-end align-items-center">
