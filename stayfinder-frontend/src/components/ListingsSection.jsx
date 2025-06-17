@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import API from '../api/axios';
 
 const ListingsSection = () => {
@@ -20,7 +20,7 @@ const ListingsSection = () => {
   return (
     <section className="section">
       <div className="container">
-        <h2 className="heading">Featured Stays</h2>
+        <h2 className="heading">Recently Featured Stays</h2>
         <div className="row">
           {listings.map(listing => (
             <div className="col-md-4" key={listing._id}>
