@@ -1,0 +1,54 @@
+.image-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 10px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.main-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.side-images {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.side-images .thumb img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .image-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .side-images {
+    grid-template-rows: none;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .side-images .thumb img {
+    height: 120px;
+  }
+}
+.listing-details-page {
+  padding-bottom: 60px;
+}
+
+.image-grid img {
+  transition: 0.3s ease;
+}
+
+.image-grid img:hover {
+  opacity: 0.9;
+}

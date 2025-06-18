@@ -8,7 +8,11 @@ const ListingsSection = () => {
     const fetchListings = async () => {
       try {
         const res = await API.get('/listings');
-        setListings(res.data);
+        const sorted = [...res.data]
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // sort by date descending
+        .slice(0, 3);
+
+      setListings(sorted);
       } catch (err) {
         console.error('Error fetching listings:', err);
       }
@@ -21,7 +25,7 @@ const ListingsSection = () => {
     <section className="section">
       <div className="container">
         <h2 className="heading">Recently Featured Stays</h2>
-        <div className="row">
+        <div className="row" style={{marginTop: '70px'}}>
           {listings.map(listing => (
             <div className="col-md-4" key={listing._id}>
               <div className="card">

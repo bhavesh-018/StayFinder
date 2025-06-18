@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react';
 import API from '../api/axios';
 import StyledListingCard from '../components/StyledListingCard';
+import Toast from '../components/Toast';
+import { useLocation } from 'react-router-dom';
 
 const MyListings = () => {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
+  const toastData = location.state?.toast;
+
+  const [toast, setToast] = useState(toastData || null);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -27,6 +33,14 @@ const MyListings = () => {
   }, []);
 
   return (
+    <>
+     {toast && (
+        <Toast
+          type={toast.type}
+          message={toast.message}
+          onClose={() => setToast(null)}
+        />
+      )}
     <div className="container" style={{ marginTop: '100px' }}>
       <h2 className="mb-4">My Listings</h2>
       {loading ? (
@@ -39,6 +53,7 @@ const MyListings = () => {
         ))
       )}
     </div>
+    </>
   );
 };
 

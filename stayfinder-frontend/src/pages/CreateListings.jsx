@@ -15,7 +15,6 @@ const CreateListing = () => {
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   // Handle form input
   const handleChange = (e) => {
@@ -62,8 +61,9 @@ const CreateListing = () => {
         { ...formData, images },
         { headers: { Authorization: `Bearer ${token}`,  'Content-Type': 'application/json', } }
       );
-      setSuccess('Listing created successfully!');
-      setTimeout(() => navigate('/my-listings'), 1500);
+      navigate('/my-listings', {
+  state: { toast: { type: 'success', message: 'Listing created successfully!' } }
+});
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create listing');
     }
@@ -80,7 +80,6 @@ const CreateListing = () => {
   </div>
 
       {error && <div className="alert alert-danger">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
       <form onSubmit={handleSubmit}>
         <input
           type="text"
