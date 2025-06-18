@@ -1,42 +1,46 @@
 import { useEffect } from 'react';
 
-const Toast = ({ message, onClose }) => {
+const Toast = ({ message, type = 'error', onClose }) => {
   useEffect(() => {
-    const timer = setTimeout(onClose, 3000); // auto-close after 3s
+    const timer = setTimeout(onClose, 3000);
     return () => clearTimeout(timer);
   }, [onClose]);
 
   return (
     <>
-    <style>
-        {
-            `
-.custom-toast {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #f56565;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 6px;
-  z-index: 9999;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  font-weight: 500;
-  animation: fadein 0.3s ease-in-out;
-}
+      <style>
+        {`
+          .custom-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 6px;
+            z-index: 9999;
+            font-weight: 500;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: fadein 0.3s ease-in-out;
+          }
 
-@keyframes fadein {
-  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
+          .custom-toast.success {
+            background-color: #38a169; /* green */
+          }
 
-            `
-        }
-    </style>
-    <div className="custom-toast">
-      {message}
-    </div>
+          .custom-toast.error {
+            background-color: #e53e3e; /* red */
+          }
+
+          @keyframes fadein {
+            from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+            to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+          }
+        `}
+      </style>
+      <div className={`custom-toast ${type}`}>
+        {message}
+      </div>
     </>
   );
 };
