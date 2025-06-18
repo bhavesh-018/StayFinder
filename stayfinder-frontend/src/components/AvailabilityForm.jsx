@@ -102,8 +102,8 @@ const AvailabilityForm = () => {
 
           {/* Buttons */}
           <div className="row mt-4">
-            <div className="col-md-6 col-lg-3"></div>
-            <div className="col-md-6 col-lg-3">
+            <div className={isHost ? 'col-md-6 col-lg-3' : 'col-md-6 col-lg-4'}></div>
+            <div className={isHost ? 'col-md-6 col-lg-3' : 'col-md-6 col-lg-4'}>
               <button type="submit" className="btn btn-warning w-100 text-white fw-bold">
                 Check Availability
               </button>
