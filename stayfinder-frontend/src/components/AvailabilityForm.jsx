@@ -5,15 +5,19 @@ import 'react-datepicker/dist/react-datepicker.css';
 import '../AvailabilityForm.css';
 import { Country, State, City } from 'country-state-city';
 import Toast from './Toast';
+import { Link } from 'react-router-dom';
 
 const AvailabilityForm = () => {
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
   const [guests, setGuest] = useState(1);
-  const navigate = useNavigate();
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState('');
-   const [showToast, setShowToast] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const navigate = useNavigate();
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  const isHost = user?.role?.includes('host');
 
   useEffect(() => {
     const indiaStates = State.getStatesOfCountry('IN');
@@ -36,31 +40,29 @@ const AvailabilityForm = () => {
 
   return (
     <>
-    <div className="availability-form">
-      <form onSubmit={handleSubmit}>
-        <div className="row">
-          {/* Location */}
-          <div className="col-md-6 col-lg-3">
-            <label htmlFor="location" className="label">Location</label>
-            <select
-              id="location"
-              className="form-control"
-              value={selectedCity}
-              onChange={(e) => setSelectedCity(e.target.value)}
-            >
-              <option value="">Select City</option>
-              {cities.map((c) => (
-                <option key={`${c.stateCode}-${c.name}`} value={c.name}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </div>
+      <div className="availability-form p-4 bg-white rounded shadow">
+        <form onSubmit={handleSubmit}>
+          <div className="row g-3">
+            {/* Location */}
+            <div className="col-md-6 col-lg-3">
+              <label className="label">Location</label>
+              <select
+                className="form-control"
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+              >
+                <option value="">Select City</option>
+                {cities.map((c) => (
+                  <option key={`${c.stateCode}-${c.name}`} value={c.name}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          {/* Check-in */}
-          <div className="col-md-6 col-lg-3">
-            <label className="label">Check In</label>
-            <div className="field-icon-wrap">
+            {/* Check-in */}
+            <div className="col-md-6 col-lg-3">
+              <label className="label">Check In</label>
               <DatePicker
                 selected={checkIn}
                 onChange={(date) => setCheckIn(date)}
@@ -69,12 +71,10 @@ const AvailabilityForm = () => {
                 placeholderText="Select check-in"
               />
             </div>
-          </div>
 
-          {/* Check-out */}
-          <div className="col-md-6 col-lg-3">
-            <label className="label">Check Out</label>
-            <div className="field-icon-wrap">
+            {/* Check-out */}
+            <div className="col-md-6 col-lg-3">
+              <label className="label">Check Out</label>
               <DatePicker
                 selected={checkOut}
                 onChange={(date) => setCheckOut(date)}
@@ -83,37 +83,49 @@ const AvailabilityForm = () => {
                 placeholderText="Select check-out"
               />
             </div>
-          </div>
 
-          {/* Adults & Children */}
-          <div className="col-md-6 col-lg-3">
-            <div className="row">
-              <div className="col-md-6">
-                <label className="label">Guests</label>
-                <select
-                  className="form-control"
-                  
-                  onChange={(e) => setGuest(e.target.value)}
-                >
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4+</option>
-                </select>
-              </div>
+            {/* Guests */}
+            <div className="col-md-6 col-lg-3">
+              <label className="label">Guests</label>
+              <select
+                className="form-control"
+                value={guests}
+                onChange={(e) => setGuest(e.target.value)}
+              >
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4+</option>
+              </select>
             </div>
           </div>
 
-          {/* Submit */}
-          <div className="col-md-6 col-lg-3 align-self-end mt-3">
-            <button className="btn btn-primary btn-block text-white">
-              Check Availability
-            </button>
+          {/* Buttons */}
+          <div className="row mt-4">
+            <div className="col-md-6 col-lg-3"></div>
+            <div className="col-md-6 col-lg-3">
+              <button type="submit" className="btn btn-warning w-100 text-white fw-bold">
+                Check Availability
+              </button>
+            </div>
+            {isHost && (
+              <div className="col-md-6 col-lg-3 mt-2 mt-md-0">
+                <Link to="/listings/create" className="btn btn-outline-warning w-100 fw-bold">
+                  + Create Listing
+                </Link>
+              </div>
+            )}
+            <div className="col-md-6 col-lg-3"></div>
           </div>
-        </div>
-      </form>
-    </div>
-    {showToast && <Toast message="Please select a location to search" onClose={() => setShowToast(false)} />}
+        </form>
+      </div>
+
+      {showToast && (
+        <Toast
+          message="Please select a location to search"
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </>
   );
 };

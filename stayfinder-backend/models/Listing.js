@@ -27,7 +27,7 @@ const listingSchema = new mongoose.Schema({
   description: String,
   location: String,
   price: { type: Number, required: true },
-  image: String,
+  images: [String],
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
