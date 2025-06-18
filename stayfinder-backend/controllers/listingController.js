@@ -2,29 +2,23 @@ const Listing = require('../models/Listing');
 
 exports.createListing = async (req, res) => {
   try {
-    const { title, description, location, price } = req.body;
+    const { title, description, location, price, images } = req.body;
 
-    // Basic validation
     if (!title || !description || !location || !price) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // Check if files were uploaded
-    if (!req.files || req.files.length === 0) {
+    if (!images || !Array.isArray(images) || images.length === 0) {
       return res.status(400).json({ message: 'At least one image is required' });
     }
 
-    // Extract Cloudinary URLs from uploaded files
-    const imageUrls = req.files.map(file => file.path); // Cloudinary returns secure URL in `path`
-
-    // Create new listing
     const listing = new Listing({
       title,
       description,
       location,
       price,
-      images: imageUrls,
-      owner: req.user._id, // assuming you're attaching user from auth middleware
+      images, // this should be an array of URLs (strings)
+      owner: req.user._id,
     });
 
     await listing.save();

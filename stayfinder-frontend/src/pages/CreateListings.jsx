@@ -57,13 +57,13 @@ const CreateListing = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await API.post(
+      await API.post(
         '/listings',
         { ...formData, images },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}`,  'Content-Type': 'application/json', } }
       );
       setSuccess('Listing created successfully!');
-      setTimeout(() => navigate('/listings/'), 1500);
+      setTimeout(() => navigate('/my-listings'), 1500);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create listing');
     }
