@@ -54,6 +54,16 @@ exports.getListingById = async (req, res) => {
   }
 };
 
+exports.getListingsByOwner = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const listings = await Listing.find({ owner: userId });
+    res.json(listings);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 exports.updateListing = async (req, res) => {
   try {
     const listing = await Listing.findById(req.params.id);
