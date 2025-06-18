@@ -24,8 +24,8 @@ const Navbar = () => {
 
   return () => window.removeEventListener('scroll', handleScroll);
 }, [isHome]);
-  // Determine navbar color based on page & scroll
-  const backgroundColor = isHome ? (scrolled ? '#fff' : 'transparent') : '#fff';
+// Determine navbar color based on page & scroll
+ const backgroundColor = isHome ? (scrolled ?   '#fff' : 'transparent') : '#fff';
   const textColor = isHome ? (scrolled ? 'black' : 'white') : 'black';
   return (
     <>
@@ -95,48 +95,31 @@ const Navbar = () => {
 
       `}</style>
 
-       <header
-      className="site-header js-site-header"
-      style={{
-        backgroundColor,
+      <header className="site-header js-site-header" style={{  backgroundColor,
         padding: isHome && !scrolled ? '3.5rem 0' : '1.5rem 0',
         transition: 'all 0.3s ease',
         position: 'fixed',
         width: '100%',
-        zIndex: 1000,
-      }}
-    >
-      <div className="container-fluid">
-        <div className="row align-items-center">
-          <div
-            className="col-6 col-lg-4 site-logo"
-            data-aos="fade"
-            style={{
-              fontWeight: 'bold',
-              fontSize: '22px',
-            }}
-          >
-            <Link to="/" style={{ color: textColor, textDecoration: 'none' }}>
-              StayFinder
-            </Link>
-          </div>
+        zIndex: 1000,}}>
+        <div className="container-fluid">
+          <div className="row align-items-center">
+            <div className="col-6 col-lg-4 site-logo" data-aos="fade" style={{ fontWeight: 'bold', fontSize: '22px' }}>
+              <Link to="/" style={{ color: textColor, textDecoration: 'none' }}>StayFinder</Link>
+            </div>
 
-          <div className="col-6 col-lg-8 d-flex justify-content-end align-items-center">
-            {!user && !isAuthPage && (
-              <>
-                <Link to="/login" className="login-btn" style={{ color: textColor, borderColor: textColor }}>
-                  Login
-                </Link>
-                <Link to="/register" className="register-btn" style={{ color: textColor, borderColor: textColor }}>
-                  Register
-                </Link>
-              </>
-            )}
-            {user && <ProfileDropdown user={user} iconColor={textColor} />}
+            <div className="col-6 col-lg-8 d-flex justify-content-end align-items-center">
+              {!user && !isAuthPage && (
+                <>
+                  <Link to="/login" className="login-btn" style={{ color: textColor, borderColor: textColor }}>Login</Link>
+                  <Link to="/register" className="register-btn" style={{ color: textColor, borderColor: textColor }}>Register</Link>
+                </>
+              )}
+              {user && <ProfileDropdown user={user} iconColor={textColor} />}
+
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
     </>
   );
 };

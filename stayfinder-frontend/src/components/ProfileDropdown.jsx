@@ -38,7 +38,7 @@ const ProfileDropdown = ({ user, iconColor }) => {
       <button
         className="profile-icon"
         onClick={handleToggle}
-        style={{ color: iconColor || 'black'  }}
+        style={{ color: iconColor || 'black' }}
       >
         <i className="fa fa-user-circle" />
       </button>

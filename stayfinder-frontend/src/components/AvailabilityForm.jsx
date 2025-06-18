@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../AvailabilityForm.css';
 import { Country, State, City } from 'country-state-city';
+import Toast from './Toast';
 
 const AvailabilityForm = () => {
   const [checkIn, setCheckIn] = useState(null);
@@ -12,6 +13,7 @@ const AvailabilityForm = () => {
   const navigate = useNavigate();
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState('');
+   const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     const indiaStates = State.getStatesOfCountry('IN');
@@ -25,10 +27,15 @@ const AvailabilityForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!selectedCity) {
+      setShowToast(true);
+      return;
+    }
     navigate(`/listings?location=${encodeURIComponent(selectedCity)}`);
   };
 
   return (
+    <>
     <div className="availability-form">
       <form onSubmit={handleSubmit}>
         <div className="row">
@@ -106,6 +113,8 @@ const AvailabilityForm = () => {
         </div>
       </form>
     </div>
+    {showToast && <Toast message="Please select a location to search" onClose={() => setShowToast(false)} />}
+    </>
   );
 };
 
