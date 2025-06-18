@@ -9,8 +9,8 @@ const formatDate = (date) => {
 
 exports.createBooking = async (req, res) => {
   try {
-    const { listingId, checkIn, checkOut } = req.body;
-    const userId = req.user;
+    const { listingId, checkIn, checkOut, roomsBooked } = req.body;
+    const userId = req.user.id || req.user;
 
     // Validate required fields
     if (!listingId || !checkIn || !checkOut) {
@@ -44,7 +44,8 @@ exports.createBooking = async (req, res) => {
       user: userId,
       checkIn: formatDate(checkIn),
       checkOut: formatDate(checkOut),
-      price: totalPrice
+      price: totalPrice,
+      roomsBooked,
     });
 
     await booking.save();
@@ -56,7 +57,8 @@ exports.createBooking = async (req, res) => {
       user: booking.user,
       checkIn: formatDate(booking.checkIn),
       checkOut: formatDate(booking.checkOut),
-      totalPrice: booking.totalPrice
+      totalPrice: booking.totalPrice,
+      roomsBooked: booking.roomsBooked
     });
 
   } catch (err) {
@@ -77,6 +79,7 @@ exports.getUserBookings = async (req, res) => {
       checkIn: b.checkIn ? formatDate(b.checkIn) : null,
       checkOut: b.checkOut ? formatDate(b.checkOut) : null,
       price: b.price,
+      roomsBooked: b.roomsBooked,
       createdAt: formatDate(b.createdAt),
       updatedAt: formatDate(b.updatedAt)
     }));
@@ -109,6 +112,7 @@ exports.getUserBookingById = async (req, res) => {
       checkIn: booking.checkIn ? formatDate(booking.checkIn) : null,
       checkOut: booking.checkOut ? formatDate(booking.checkOut) : null,
       price: booking.price,
+      roomsBooked: booking.roomsBooked,
       createdAt: formatDate(booking.createdAt),
       updatedAt: formatDate(booking.updatedAt),
     });
