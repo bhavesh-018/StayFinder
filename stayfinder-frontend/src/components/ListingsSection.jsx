@@ -25,7 +25,11 @@ const ListingsSection = () => {
           {listings.map(listing => (
             <div className="col-md-4" key={listing._id}>
               <div className="card">
-                <img src={listing.image} className="card-img-top" alt={listing.title} />
+                <img
+                  src={Array.isArray(listing.images) ? listing.images[0] : listing.images}
+                  className="listing-image"
+                />
+
                 <div className="card-body">
                   <h5>{listing.title}</h5>
                   <p>{listing.location}</p>

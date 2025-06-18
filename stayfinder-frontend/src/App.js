@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import ListingsPage from './pages/ListingsPage'
 import CreateListing from '../src/pages/CreateListings';
+import MyListings from './pages/MyListings';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/listings" element={<ListingsPage />} />
         <Route path="/listings/create" element={<CreateListing />} />
+        <Route path='/my-listings' element={<MyListings />} />
       </Routes>
     </Router>
     </>

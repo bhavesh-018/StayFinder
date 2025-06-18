@@ -1,10 +1,16 @@
 import '../StyledListingCard.css';
 
-const StyledListingCard = ({ title, location, rating, reviewText, stars, image, price }) => {
+const StyledListingCard = ({ title, location, rating, reviewText, stars, images, price }) => {
   return (
+    <>
+    <hr className="listing-separator" /> 
     <div className="listing-card">
       <div className="listing-left">
-        <img src={image} alt={title} className="listing-image" />
+        <img
+          src={Array.isArray(images) ? images[0] : images}
+          alt={title}
+          className="listing-image"
+        />
       </div>
       <div className="listing-center">
         <h4 className="listing-title">{title}</h4>
@@ -21,6 +27,7 @@ const StyledListingCard = ({ title, location, rating, reviewText, stars, image, 
         <button className="view-btn">View Deal</button>
       </div>
     </div>
+    </>
   );
 };
 

@@ -5,13 +5,9 @@ import '../ProfileDropdown.css';
 const ProfileDropdown = ({ user, iconColor }) => {
 
   const [showDropdown, setShowDropdown] = useState(false);
-  const location = useLocation();
   const navigate = useNavigate();
   const dropdownRef = useRef();
   const roles = user?.role || [];
-  console.log(roles);
-
-  const isHome = location.pathname === '/';
 
   const handleToggle = () => {
     setShowDropdown(prev => !prev);
@@ -25,8 +21,9 @@ const ProfileDropdown = ({ user, iconColor }) => {
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        window.location.reload();
         navigate('/');
+        window.location.reload();
+        
       };
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
@@ -46,8 +43,8 @@ const ProfileDropdown = ({ user, iconColor }) => {
       {showDropdown && (
         <div className="dropdown-menu-custom">
           <Link to="/profile">My Profile</Link>
-          {roles.includes('guest') && <Link to="/bookings">Bookings</Link>}
-          {roles.includes('host') && <Link to="/listings">Listings</Link>}
+          {roles.includes('guest') && <Link to="/bookings">My Bookings</Link>}
+          {roles.includes('host') && <Link to="/my-listings">My Listings</Link>}
           <button onClick={handleLogout}>Logout</button>
         </div>
       )}
