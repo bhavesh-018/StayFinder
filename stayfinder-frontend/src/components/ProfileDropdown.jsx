@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import '../ProfileDropdown.css';
 
-const ProfileDropdown = ({ user }) => {
+const ProfileDropdown = ({ user, iconColor }) => {
 
   const [showDropdown, setShowDropdown] = useState(false);
   const location = useLocation();
@@ -38,7 +38,7 @@ const ProfileDropdown = ({ user }) => {
       <button
         className="profile-icon"
         onClick={handleToggle}
-        style={{ color: isHome ? 'white' : 'black' }}
+        style={{ color: iconColor || 'black'  }}
       >
         <i className="fa fa-user-circle" />
       </button>

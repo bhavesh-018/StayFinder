@@ -1,12 +1,32 @@
 import { Link, useLocation } from 'react-router-dom';
 import ProfileDropdown from './ProfileDropdown';
+import { useEffect, useState } from 'react';
 
 const Navbar = () => {
   const location = useLocation();
+  const [scrolled, setScrolled] = useState(false);
   const isHome = location.pathname === '/';
   const user = JSON.parse(localStorage.getItem('user'));
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
+  useEffect(() => {
+  const handleScroll = () => {
+    if (window.scrollY > 50) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+  };
+
+  if (isHome) {
+    window.addEventListener('scroll', handleScroll);
+  }
+
+  return () => window.removeEventListener('scroll', handleScroll);
+}, [isHome]);
+  // Determine navbar color based on page & scroll
+  const backgroundColor = isHome ? (scrolled ? '#fff' : 'transparent') : '#fff';
+  const textColor = isHome ? (scrolled ? 'black' : 'white') : 'black';
   return (
     <>
       <style>{`
@@ -75,26 +95,48 @@ const Navbar = () => {
 
       `}</style>
 
-      <header className="site-header js-site-header" style={{ backgroundColor: isHome ? 'transparent' : '#fbbf24', transition: 'background 0.3s ease',  padding: isHome ? '3.5rem 0' : '2rem 0', }}>
-        <div className="container-fluid">
-          <div className="row align-items-center">
-            <div className="col-6 col-lg-4 site-logo" data-aos="fade" style={{ color: isHome ? 'white' : 'black', fontWeight: 'bold', fontSize: '22px' }}>
-              <Link to="/" style={{ color: isHome ? 'white' : 'black', textDecoration: 'none' }}>StayFinder</Link>
-            </div>
+       <header
+      className="site-header js-site-header"
+      style={{
+        backgroundColor,
+        padding: isHome && !scrolled ? '3.5rem 0' : '1.5rem 0',
+        transition: 'all 0.3s ease',
+        position: 'fixed',
+        width: '100%',
+        zIndex: 1000,
+      }}
+    >
+      <div className="container-fluid">
+        <div className="row align-items-center">
+          <div
+            className="col-6 col-lg-4 site-logo"
+            data-aos="fade"
+            style={{
+              fontWeight: 'bold',
+              fontSize: '22px',
+            }}
+          >
+            <Link to="/" style={{ color: textColor, textDecoration: 'none' }}>
+              StayFinder
+            </Link>
+          </div>
 
-            <div className="col-6 col-lg-8 d-flex justify-content-end align-items-center">
-              {!user && !isAuthPage && (
-                <>
-                  <Link to="/login" className="login-btn">Login</Link>
-                  <Link to="/register" className="register-btn">Register</Link>
-                </>
-              )}
-              {user && <ProfileDropdown user={user}/>}
-
-            </div>
+          <div className="col-6 col-lg-8 d-flex justify-content-end align-items-center">
+            {!user && !isAuthPage && (
+              <>
+                <Link to="/login" className="login-btn" style={{ color: textColor, borderColor: textColor }}>
+                  Login
+                </Link>
+                <Link to="/register" className="register-btn" style={{ color: textColor, borderColor: textColor }}>
+                  Register
+                </Link>
+              </>
+            )}
+            {user && <ProfileDropdown user={user} iconColor={textColor} />}
           </div>
         </div>
-      </header>
+      </div>
+    </header>
     </>
   );
 };

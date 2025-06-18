@@ -82,7 +82,7 @@ const AvailabilityForm = () => {
           <div className="col-md-6 col-lg-3">
             <div className="row">
               <div className="col-md-6">
-                <label className="label">Adults</label>
+                <label className="label">Guests</label>
                 <select
                   className="form-control"
                   
