@@ -170,7 +170,7 @@ const ListingDetails = () => {
           <p className="text-muted mb-0" style={{ fontSize: '13px' }}>Includes taxes & fees</p>
         </div>
 
-        {user && user.id === listing.owner?._id ? (
+        {user && user._id === listing.owner?._id ? (
   <div className="text-success fw-semibold text-center mt-2">
      <span class="badge badge-pill badge-success fw-semibold"  style={{ fontSize: '1rem', padding: '10px 20px', borderRadius: '999px' }}>You own this listing</span></div>
 ) : (
