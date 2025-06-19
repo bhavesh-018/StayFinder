@@ -40,9 +40,28 @@ const Navbar = () => {
           font-weight: 500;
         }
         .login-btn:hover, .register-btn:hover {
-          background: white;
-          color: #000;
+          background-color: white;
+          color: black;
         }
+          .white-theme {
+      color: white;
+      border: 1px solid white;
+    }
+
+    .white-theme:hover {
+      color: black;
+      background-color: white;
+    }
+
+    .black-theme {
+      color: black;
+      border: 1px solid black;
+    }
+
+    .black-theme:hover {
+      color: white;
+      background-color: black;
+    }
         @media (max-width: 768px) {
           .login-btn, .register-btn {
             font-size: 14px;
@@ -110,8 +129,10 @@ const Navbar = () => {
             <div className="col-6 col-lg-8 d-flex justify-content-end align-items-center">
               {!user && !isAuthPage && (
                 <>
-                  <Link to="/login" className="login-btn" style={{ color: textColor, borderColor: textColor }}>Login</Link>
-                  <Link to="/register" className="register-btn" style={{ color: textColor, borderColor: textColor }}>Register</Link>
+                  <Link to="/login" className={`login-btn ${textColor === 'black' ? 'black-theme' : 'white-theme'}`}>
+  Login
+</Link>
+                  <Link to="/register" className={`register-btn ${textColor === 'black' ? 'black-theme' : 'white-theme'}`}>Register</Link>
                 </>
               )}
               {user && <ProfileDropdown user={user} iconColor={textColor} />}
