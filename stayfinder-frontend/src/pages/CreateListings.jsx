@@ -72,11 +72,11 @@ const CreateListing = () => {
   return (
     <div className="container" style={{ maxWidth: '600px', marginTop: '90px' }}>
       
-       <h2 className="mb-3 text-center">Create New Listing</h2>
+       <h2 className="mb-3 text-center text-white">Create New Listing</h2>
 
   <div className="mb-4 text-center">
-    <h4 className="fw-bold">“Turn your space into an opportunity.”</h4>
-    <p className="text-muted">Share your home with the world and start earning with StayFinder.</p>
+    <h4 className="fw-bold text-white">“Turn your space into an opportunity.”</h4>
+    <p className="text-muted text-white">Share your home with the world and start earning with StayFinder.</p>
   </div>
 
       {error && <div className="alert alert-danger">{error}</div>}

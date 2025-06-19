@@ -177,7 +177,7 @@ exports.cancelBooking = async (req, res) => {
 
     if (!booking) return res.status(404).json({ message: 'Booking not found' });
 
-    if (booking.user.toString() !== req.user.toString()) {
+    if (booking.user.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 

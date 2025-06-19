@@ -15,6 +15,7 @@ const ListingDetails = () => {
   const [showModal, setShowModal] = useState(false);
   const [toast, setToast] = useState('');
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user'));
   const token = localStorage.getItem('token');
 
   useEffect(() => {
@@ -68,16 +69,33 @@ const ListingDetails = () => {
     <div className="container listing-details-page" style={{marginTop: '100px'}}>
       {/* Image Grid */}
       <div className="image-grid mb-4">
-        <div className="main-image" onClick={() => openLightbox(0)}>
-          <img src={listing.images[0]} alt="Main" />
-          {listing.images.length > 5 && (
-            <div className="see-all" onClick={() => openLightbox(0)}>
-              See all photos
-            </div>
-          )}
-        </div>
+        <div className="main-image position-relative" onClick={() => openLightbox(0)}>
+  <img src={listing.images[0]} alt="Main" className="img-fluid w-100 rounded" />
+
+  {listing.images.length > 3 && (
+    <button
+      className="see-all-btn btn btn-light position-absolute"
+      style={{
+        bottom: '15px',
+        right: '15px',
+        backgroundColor: 'rgba(255,255,255,0.9)',
+        border: 'none',
+        fontWeight: '500',
+        padding: '6px 12px',
+        borderRadius: '999px',
+        zIndex: 2,
+      }}
+      onClick={(e) => {
+        e.stopPropagation(); // prevent parent div from triggering
+        openLightbox(0);
+      }}
+    >
+      See all photos
+    </button>
+  )}
+</div>
         <div className="side-images">
-          {listing.images.slice(1, 5).map((img, idx) => (
+          {listing.images.slice(1, 4).map((img, idx) => (
             <div key={idx} className="thumb" onClick={() => openLightbox(idx + 1)}>
               <img src={img} alt={`Thumb ${idx + 1}`} />
             </div>
@@ -89,15 +107,50 @@ const ListingDetails = () => {
         <div className="listing-details-bottom mb-5">
             <div className="row">
         {/* Left: Title, Location, Description */}
-        <div className="col-md-7">
-        <h2 className="fw-bold mb-2">{listing.title}</h2>
-        <p className="text-muted mb-2"><i className="fa fa-map-marker-alt me-2"></i>{listing.location}</p>
-        <p>{listing.description}</p>
-        </div>
+       <div className="col-md-7">
+  <div className="card border-0 shadow-sm p-4 rounded-4 bg-light" style={{marginLeft: '60px', width: '93%'}}>
+    {/* Title & Location */}
+    <div className="mb-3">
+      <h2 className="fw-bold text-dark mb-2" style={{ fontSize: '26px' }}>
+        {listing.title}
+      </h2>
+      <p className="text-muted mb-0" style={{ fontSize: '15px' }}>
+        <i className="fa fa-map-marker-alt text-danger me-2"></i>
+        {listing.location}
+      </p>
+    </div>
+    <div className="mt-3 d-flex flex-wrap gap-2">
+  <span className="badge bg-light text-success border border-success px-3 py-2 fw-semibold">
+    <i className="fa fa-check-circle me-1"></i> Free Cancellation
+  </span>
+  <span className="badge bg-light text-info border border-info px-3 py-2 fw-semibold">
+    <i className="fa fa-wifi me-1"></i> Free Wi-Fi
+  </span>
+  <span className="badge bg-light text-secondary border border-secondary px-3 py-2 fw-semibold">
+    <i className="fa fa-utensils me-1"></i> Breakfast Included
+  </span>
+  <span className="badge bg-light text-warning border border-warning px-3 py-2 fw-semibold">
+    <i className="fa fa-concierge-bell me-1"></i> 24/7 Front Desk
+  </span>
+</div>
+
+
+    {/* Divider */}
+    <hr className="my-4" />
+
+    {/* Description */}
+    <p className="text-dark" style={{ fontSize: '16px', lineHeight: '1.8' }}>
+      {listing.description}
+    </p>
+
+    {/* Perks / Tags */}
+    
+  </div>
+</div>
 
         {/* Right: Ratings + Pricing */}
-        <div className="col-md-4">
-        <div className="card shadow-sm p-3" style={{marginLeft:'60px'}}>
+        <div className="col-md-5">
+        <div className="card shadow-sm p-4" style={{width: '90%'}}>
             <div className="d-flex align-items-center gap-3 mb-3">
   <div className="bg-primary text-white rounded p-2 px-3 fw-bold" style={{ fontSize: '18px', marginRight: '10px' }}>
     8.1
@@ -113,11 +166,21 @@ const ListingDetails = () => {
         <hr />
 
         <div className="mb-3">
-          <h5 className="mb-1">From <span className="text-primary">₹{listing.price}</span> / night</h5>
+          <h5 className="mb-1"><span className="text-primary">₹{listing.price}</span> / night</h5>
           <p className="text-muted mb-0" style={{ fontSize: '13px' }}>Includes taxes & fees</p>
         </div>
 
-        <button className="btn btn-primary w-100 mt-2" onClick={() => setShowModal(true)}>Book Now</button>
+        {user && user.id === listing.owner?._id ? (
+  <div className="text-success fw-semibold text-center mt-2">
+     <span class="badge badge-pill badge-success fw-semibold"  style={{ fontSize: '1rem', padding: '10px 20px', borderRadius: '999px' }}>You own this listing</span></div>
+) : (
+  <button
+    className="btn btn-primary w-100 mt-2"
+    onClick={() => setShowModal(true)}
+  >
+    Book Now
+  </button>
+)}
       </div>
     </div>
   </div>

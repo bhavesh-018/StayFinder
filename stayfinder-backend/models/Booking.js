@@ -9,7 +9,7 @@ const bookingSchema = new mongoose.Schema({
   roomsBooked: {type: Number, required: true,  default: 1},
   status: {
     type: String,
-    enum: ['ACTIVE', 'CANCELLED'],
+    enum: ['ACTIVE', 'COMPLETED' ,'CANCELLED'],
     default: 'ACTIVE',
   }
 }, { timestamps: true });

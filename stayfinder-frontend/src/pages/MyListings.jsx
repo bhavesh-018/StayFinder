@@ -42,7 +42,7 @@ const MyListings = () => {
         />
       )}
     <div className="container" style={{ marginTop: '100px' }}>
-      <h2 className="mb-4">My Listings</h2>
+      <h2 className="mb-4 text-white text-bold">My Listings</h2>
       {loading ? (
         <p>Loading...</p>
       ) : listings.length === 0 ? (
