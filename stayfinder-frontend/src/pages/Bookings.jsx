@@ -31,45 +31,69 @@ const Bookings = () => {
   }, []);
 
   return (
-    <div className="container mt-5" style={{ maxWidth: '900px' }}>
-      <h2 className="mb-4 fw-bold">My Bookings</h2>
-
+    <>
+    <style>
+      {
+        `.booking-card-img {
+  height: 100%;
+  object-fit: cover;
+}
+  .listing-separator {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 32px 0;
+  width: 100%;
+}
+        `
+      }
+    </style>
+    <div className="container mt-5" style={{ maxWidth: '900px'}}>
       {toast && <Toast message={toast} type="success" onClose={() => setToast('')} />}
 
       {bookings.length === 0 ? (
         <p className="text-muted">No bookings yet.</p>
       ) : (
-        bookings.map((booking, index) => (
-          <div key={index} className="card mb-4 shadow-sm">
-            <div className="row g-0">
-              <div className="col-md-4">
-                <img
-                  src={Array.isArray(booking.listing?.images) ? booking.listing.images[0] : '/default.jpg'}
-                  className="img-fluid rounded-start"
-                  alt={booking.listing?.title || 'Listing'}
-                />
-              </div>
-              <div className="col-md-8">
-                <div className="card-body">
-                  <h5 className="card-title mb-1">{booking.listing?.title}</h5>
-                  <p className="text-muted mb-1">{booking.listing?.location}</p>
-                  <p className="mb-1">
-                    <strong>Check In:</strong> {booking.checkIn}
-                  </p>
-                  <p className="mb-1">
-                    <strong>Check Out:</strong> {booking.checkOut}
-                  </p>
-                  <p className="mb-1">
-                    <strong>Rooms:</strong> {booking.roomsBooked}
-                  </p>
-                  <h6 className="mt-2 text-primary">Total: ₹{booking.price}</h6>
-                </div>
-              </div>
+        <div className="container mt-5" >
+  <h2 style={{marginTop: '100px'}}>
+    My Bookings</h2>
+  <hr className="listing-separator" />
+  {bookings.length === 0 ? (
+    <p>No bookings found.</p>
+  ) : (
+    bookings.map((b) => (
+      <div key={b._id} className="card mb-4 shadow-sm" >
+        <div className="row g-0">
+          {/* Left: Image */}
+          <div className="col-md-4">
+            <img
+              src={Array.isArray(b.listing?.images) ? b.listing.images[0] : b.listing?.images}
+              className="img-fluid rounded-start booking-card-img"
+              alt={b.listing?.title}
+              style={{ objectFit: 'cover', height: '100%', width: '100%' }}
+            />
+          </div>
+
+          {/* Right: Info */}
+          <div className="col-md-8">
+            <div className="card-body">
+              <h5 className="card-title">{b.listing?.title}</h5>
+              <p className="text-muted mb-2">{b.listing?.location}</p>
+              <p className="mb-1"><strong>Check-in:</strong> {b.checkIn}</p>
+              <p className="mb-1"><strong>Check-out:</strong> {b.checkOut}</p>
+              <p className="mb-1"><strong>Rooms:</strong> {b.roomsBooked}</p>
+              <p className="mb-1"><strong>Total:</strong> ₹{b.price}</p>
+              <span class="badge badge-pill badge-success">Active</span>
             </div>
           </div>
-        ))
+        </div>
+      </div>
+    ))
+  )}
+</div>
+
       )}
     </div>
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import API from '../api/axios';
+import { Link } from 'react-router-dom';
 
 const ListingsSection = () => {
   const [listings, setListings] = useState([]);
@@ -38,7 +39,9 @@ const ListingsSection = () => {
                   <h5>{listing.title}</h5>
                   <p>{listing.location}</p>
                   <p>₹{listing.price} / night</p>
+                  <Link to={`/listings/${listing._id}`}>
                   <button className="btn btn-sm btn-outline-primary">View</button>
+                  </Link>
                 </div>
               </div>
             </div>
