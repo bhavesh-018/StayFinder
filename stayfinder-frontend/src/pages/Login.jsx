@@ -27,11 +27,11 @@ const Login = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#f8f9fa',
       }}
     >
     <div className="container" style={{ maxWidth: '400px' }}>
-      <h2 className="mb-3">Login</h2>
+      <div className="card shadow p-4 border-0">
+      <h2 className="mb-3 text-center">Login</h2>
       {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleLogin}>
         <input
@@ -58,6 +58,12 @@ const Login = () => {
       <p className="mt-3 text-center">
         Don’t have an account? <Link to="/register">Create one</Link>
       </p>
+      <p className="mt-2 text-center">
+  <Link to="/forgot-password" className="text-decoration-none">
+    Forgot Password?
+  </Link>
+</p>
+</div>
     </div>
     </div>
   );

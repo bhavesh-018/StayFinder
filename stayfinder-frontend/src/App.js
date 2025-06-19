@@ -10,6 +10,8 @@ import MyListings from './pages/MyListings';
 import ListingDetails from './pages/ListingDetails';
 import Bookings from './pages/Bookings';
 import FixedBackground from './components/FixedBackground';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path='/' element={<Home />}/>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/listings" element={<ListingsPage />} />
         <Route path="/listings/create" element={<CreateListing />} />

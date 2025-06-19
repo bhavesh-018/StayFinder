@@ -18,7 +18,9 @@ const userSchema = new mongoose.Schema({
     type: [String],
     enum: ['host', 'guest'],
     default: ['guest']
-  }
+  },
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 });
 
 module.exports = mongoose.model('User', userSchema);
