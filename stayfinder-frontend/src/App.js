@@ -9,11 +9,13 @@ import CreateListing from '../src/pages/CreateListings';
 import MyListings from './pages/MyListings';
 import ListingDetails from './pages/ListingDetails';
 import Bookings from './pages/Bookings';
+import FixedBackground from './components/FixedBackground';
 
 function App() {
   return (
     <>
     <Router>
+      <FixedBackground /> 
       <Navbar />
       <Routes>
         <Route path='/' element={<Home />}/>

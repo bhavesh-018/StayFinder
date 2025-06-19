@@ -25,8 +25,8 @@ const Navbar = () => {
   return () => window.removeEventListener('scroll', handleScroll);
 }, [isHome]);
 // Determine navbar color based on page & scroll
- const backgroundColor = isHome ? (scrolled ?   '#fff' : 'transparent') : '#fff';
-  const textColor = isHome ? (scrolled ? 'black' : 'white') : 'black';
+  const backgroundColor = scrolled ?   '#fff' : 'transparent';
+  const textColor = scrolled ? 'black' : 'white';
   return (
     <>
       <style>{`
