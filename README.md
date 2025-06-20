@@ -38,7 +38,7 @@ StayFinder is a full-stack web application inspired by Airbnb. Users can browse 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/stayfinder.git
+git clone https://github.com/bhavesh-018/stayfinder.git
 cd stayfinder
 ```
 
