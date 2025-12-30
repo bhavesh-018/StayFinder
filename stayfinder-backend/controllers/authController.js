@@ -99,15 +99,7 @@ exports.forgotPassword = async (req, res) => {
 
     // Reset URL
     const resetLink = `http://localhost:3000/reset-password/${token}`;
-    const transport = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
-      auth: {
-        user: "63d808115cb863",
-        pass: "8c0a298a0b40c2"
-      }
-    });
-
+  
     // Send the email
     await transporter.sendMail({
       to: email,
