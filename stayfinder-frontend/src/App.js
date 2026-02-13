@@ -12,6 +12,7 @@ import Bookings from './pages/Bookings';
 import FixedBackground from './components/FixedBackground';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import EditListing from './pages/EditListing';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path='/my-listings' element={<MyListings />} />
         <Route path='/listings/:id' element={<ListingDetails />} />
         <Route path='/bookings' element={<Bookings />} />
+        <Route path='/listings/edit/:id' element={<EditListing />} />
       </Routes>
     </Router>
     </>

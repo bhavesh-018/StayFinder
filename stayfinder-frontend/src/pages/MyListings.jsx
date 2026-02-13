@@ -49,7 +49,7 @@ const MyListings = () => {
         <p>You haven't created any listings yet.</p>
       ) : (
         listings.map((listing, i) => (
-          <StyledListingCard key={i} {...listing} />
+          <StyledListingCard key={i} {...listing} isOwner={true} />
         ))
       )}
     </div>

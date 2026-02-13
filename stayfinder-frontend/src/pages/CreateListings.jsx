@@ -10,6 +10,7 @@ const CreateListing = () => {
     description: '',
     price: '',
     location: '',
+    totalRooms: 1,
   });
 
   const [images, setImages] = useState([]);
@@ -58,7 +59,8 @@ const CreateListing = () => {
       const token = localStorage.getItem('token');
       await API.post(
         '/listings',
-        { ...formData, images },
+        { ...formData, price: Number(formData.price),
+    totalRooms: Number(formData.totalRooms), images },
         { headers: { Authorization: `Bearer ${token}`,  'Content-Type': 'application/json', } }
       );
       navigate('/my-listings', {
@@ -81,61 +83,94 @@ const CreateListing = () => {
 
       {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="title"
-          className="form-control mb-3"
-          placeholder="Title"
-          value={formData.title}
-          onChange={handleChange}
-          required
-        />
-        <textarea
-          name="description"
-          className="form-control mb-3"
-          placeholder="Description"
-          value={formData.description}
-          onChange={handleChange}
-          rows={4}
-          required
-        />
-        <input
-          type="number"
-          name="price"
-          className="form-control mb-3"
-          placeholder="Price"
-          value={formData.price}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="location"
-          className="form-control mb-3"
-          placeholder="Location"
-          value={formData.location}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          className="form-control mb-3"
-          onChange={handleImageUpload}
-        />
-        {uploading && <p>Uploading images...</p>}
-        {images.length > 0 && (
-          <div className="mb-3">
-            {images.map((img, i) => (
-              <img key={i} src={img} alt="Uploaded" width={80} className="me-2 mb-2" />
-            ))}
-          </div>
-        )}
-        <button className="btn btn-primary w-100" type="submit" disabled={uploading}>
-          Create Listing
-        </button>
-      </form>
+
+  <div className="mb-3">
+    <label className="form-label text-white">Title</label>
+    <input
+      type="text"
+      name="title"
+      className="form-control"
+      value={formData.title}
+      onChange={handleChange}
+      required
+    />
+  </div>
+
+  <div className="mb-3">
+    <label className="form-label text-white">Description</label>
+    <textarea
+      name="description"
+      className="form-control"
+      value={formData.description}
+      onChange={handleChange}
+      rows={4}
+      required
+    />
+  </div>
+
+  <div className="mb-3">
+    <label className="form-label text-white">Price per Night</label>
+    <input
+      type="number"
+      name="price"
+      className="form-control"
+      value={formData.price}
+      onChange={handleChange}
+      required
+    />
+  </div>
+
+  <div className="mb-3">
+    <label className="form-label text-white">Location</label>
+    <input
+      type="text"
+      name="location"
+      className="form-control"
+      value={formData.location}
+      onChange={handleChange}
+      required
+    />
+  </div>
+
+  <div className="mb-3">
+    <label className="form-label text-white">Total Rooms</label>
+    <input
+      type="number"
+      name="totalRooms"
+      className="form-control"
+      value={formData.totalRooms}
+      onChange={handleChange}
+      min="1"
+      required
+    />
+  </div>
+
+  <div className="mb-3">
+    <label className="form-label text-white">Upload Images</label>
+    <input
+      type="file"
+      accept="image/*"
+      multiple
+      className="form-control"
+      onChange={handleImageUpload}
+    />
+  </div>
+
+  {uploading && <p className="text-white">Uploading images...</p>}
+
+  {images.length > 0 && (
+    <div className="mb-3">
+      {images.map((img, i) => (
+        <img key={i} src={img} alt="Uploaded" width={80} className="me-2 mb-2" />
+      ))}
+    </div>
+  )}
+
+  <button className="btn btn-primary w-100" type="submit" disabled={uploading}>
+    Create Listing
+  </button>
+
+</form>
     </div>
   );
 };
