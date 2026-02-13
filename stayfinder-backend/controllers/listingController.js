@@ -83,7 +83,9 @@ exports.updateListing = async (req, res) => {
     if (description) listing.description = description;
     if (location) listing.location = location;
     if (price) listing.price = price;
-    if (totalRooms && totalRooms >= 1) listing.totalRooms = totalRooms;
+    if (typeof totalRooms !== 'undefined') {
+  listing.totalRooms = Number(totalRooms);
+}
 
     // Handle new image uploads
     if (req.files && req.files.length > 0) {

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import '../StyledListingCard.css';
 
-const StyledListingCard = ({ _id, title, location, rating, reviewText, stars, images, price }) => {
+const StyledListingCard = ({ _id, title, location, rating, reviewText, stars, images, price, isOwner }) => {
   return (
     <>
       <hr className="listing-separator" />
@@ -28,6 +28,11 @@ const StyledListingCard = ({ _id, title, location, rating, reviewText, stars, im
           <Link to={`/listings/${_id}`}>
             <button className="view-btn">View Deal</button>
           </Link>
+          {isOwner && (
+          <Link to={`/listings/edit/${_id}`}>
+            <button className="edit-btn m-1">Edit</button>
+          </Link>
+          )}
         </div>
       </div>
     </>

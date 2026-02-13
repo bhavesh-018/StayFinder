@@ -118,6 +118,11 @@ const ListingDetails = () => {
         <i className="fa fa-map-marker-alt text-danger me-2"></i>
         {listing.location}
       </p>
+      <p className="text-muted mb-0 mt-1" style={{ fontSize: '15px' }}>
+        <i className="fa fa-door-open text-primary me-2"></i>
+        {listing.totalRooms} room{listing.totalRooms > 1 ? 's' : ''} available
+      </p>
+
     </div>
     <div className="mt-3 d-flex flex-wrap gap-2">
   <span className="badge bg-light text-success border border-success px-3 py-2 fw-semibold">
