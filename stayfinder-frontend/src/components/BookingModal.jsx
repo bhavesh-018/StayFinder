@@ -4,12 +4,21 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const BookingModal = ({ show, onClose, onConfirm }) => {
+const BookingModal = ({ show, onClose, onConfirm, maxRooms }) => {
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
   const [rooms, setRooms] = useState(1);
 
   const handleSubmit = () => {
+    if (!checkIn || !checkOut) {
+    alert("Please select valid dates");
+    return;
+  }
+
+  if (rooms < 1 || rooms > maxRooms) {
+    alert(`You can book up to ${maxRooms} rooms`);
+    return;
+  }
     onConfirm({ checkIn, checkOut, rooms });
     onClose();
   };
@@ -63,6 +72,7 @@ const BookingModal = ({ show, onClose, onConfirm }) => {
             <Form.Control
               type="number"
               min="1"
+              max={maxRooms}
               value={rooms}
               onChange={(e) => setRooms(e.target.value)}
             />

@@ -204,7 +204,8 @@ const ListingDetails = () => {
       <BookingModal
       show={showModal}
       onClose={() => setShowModal(false)}
-      onConfirm={handleBooking}    
+      onConfirm={handleBooking}   
+      maxRooms={listing.totalRooms} 
       />
     </div>
   );
