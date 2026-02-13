@@ -33,6 +33,12 @@ const listingSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  totalRooms: {
+    type: Number,
+    required: true,
+    default: 1,
+    min: 1
+  },
   isAvailableForUpdate: {
     type: Boolean,
     default: true, 

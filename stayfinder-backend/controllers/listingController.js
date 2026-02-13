@@ -2,7 +2,7 @@ const Listing = require('../models/Listing');
 
 exports.createListing = async (req, res) => {
   try {
-    const { title, description, location, price, images } = req.body;
+    const { title, description, location, price, images, totalRooms } = req.body;
 
     if (!title || !description || !location || !price) {
       return res.status(400).json({ message: 'All fields are required' });
@@ -11,13 +11,16 @@ exports.createListing = async (req, res) => {
     if (!images || !Array.isArray(images) || images.length === 0) {
       return res.status(400).json({ message: 'At least one image is required' });
     }
-
+    if (totalRooms && totalRooms < 1) {
+      return res.status(400).json({ message: 'totalRooms must be at least 1' });
+    }
     const listing = new Listing({
       title,
       description,
       location,
       price,
-      images, // this should be an array of URLs (strings)
+      images,
+      totalRooms: totalRooms || 1,
       owner: req.user._id,
     });
 
@@ -80,6 +83,7 @@ exports.updateListing = async (req, res) => {
     if (description) listing.description = description;
     if (location) listing.location = location;
     if (price) listing.price = price;
+    if (totalRooms && totalRooms >= 1) listing.totalRooms = totalRooms;
 
     // Handle new image uploads
     if (req.files && req.files.length > 0) {
