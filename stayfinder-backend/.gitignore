@@ -3,3 +3,4 @@ node_modules/
 # OS/IDE
 .DS_Store
 .vscode/
+.env
