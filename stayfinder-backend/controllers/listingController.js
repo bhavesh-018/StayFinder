@@ -105,14 +105,13 @@ exports.updateListing = async (req, res) => {
     }
 
     // Update fields from req.body
-    const { title, description, location, price, totalRooms} = req.body;
+    const { title, description, location, price, totalRooms, amenities} = req.body;
     if (title) listing.title = title;
     if (description) listing.description = description;
     if (location) listing.location = location;
     if (price) listing.price = price;
-    if (typeof totalRooms !== 'undefined') {
-  listing.totalRooms = Number(totalRooms);
-}
+    if (typeof totalRooms !== 'undefined') {listing.totalRooms = Number(totalRooms);}
+    if (amenities) listing.amenities = amenities;
 
     // Handle new image uploads
     if (req.files && req.files.length > 0) {

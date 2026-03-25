@@ -11,11 +11,40 @@ const CreateListing = () => {
     price: '',
     location: '',
     totalRooms: 1,
+    amenities: [],
   });
 
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const AMENITIES_LIST = [
+    "Free Wi-Fi",
+    "Air Conditioning",
+    "Heating",
+    "Parking",
+    "Free Cancellation",
+    "Breakfast Included",
+    "24/7 Front Desk",
+    "Swimming Pool",
+    "Gym",
+    "Laundry Service",
+    "Room Service",
+    "Pet Friendly",
+    "Airport Shuttle",
+    "Restaurant",
+    "Bar",
+    "Spa",
+    "Elevator",
+    "Wheelchair Accessible",
+    "TV",
+    "Kitchen",
+    "Balcony",
+    "Sea View",
+    "Mountain View",
+    "Workspace",
+    "Security",
+    "Housekeeping"
+  ];
 
   // Handle form input
   const handleChange = (e) => {
@@ -144,6 +173,49 @@ const CreateListing = () => {
       required
     />
   </div>
+
+  <div className="mb-3">
+  <label className="form-label text-white">Amenities</label>
+
+  <div className="d-flex flex-wrap gap-2">
+
+    {AMENITIES_LIST.map((amenity, index) => {
+      const isSelected = formData.amenities.includes(amenity);
+
+      return (
+        <span
+          key={index}
+          onClick={() => {
+            if (isSelected) {
+              setFormData({
+                ...formData,
+                amenities: formData.amenities.filter(a => a !== amenity)
+              });
+            } else {
+              setFormData({
+                ...formData,
+                amenities: [...formData.amenities, amenity]
+              });
+            }
+          }}
+          style={{
+            cursor: 'pointer',
+            padding: '6px 12px',
+            borderRadius: '20px',
+            fontSize: '14px',
+            border: isSelected ? '1px solid #0d6efd' : '1px solid #555',
+            backgroundColor: isSelected ? '#0d6efd' : 'transparent',
+            color: isSelected ? '#fff' : '#ccc',
+            transition: '0.2s'
+          }}
+        >
+          {amenity}
+        </span>
+      );
+    })}
+
+  </div>
+</div>
 
   <div className="mb-3">
     <label className="form-label text-white">Upload Images</label>

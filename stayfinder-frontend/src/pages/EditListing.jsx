@@ -11,8 +11,37 @@ const EditListing = () => {
     description: '',
     price: '',
     location: '',
-    totalRooms: 1
+    totalRooms: 1,
+    amenities: [],
   });
+  const AMENITIES_LIST = [
+    "Free Wi-Fi",
+    "Air Conditioning",
+    "Heating",
+    "Parking",
+    "Free Cancellation",
+    "Breakfast Included",
+    "24/7 Front Desk",
+    "Swimming Pool",
+    "Gym",
+    "Laundry Service",
+    "Room Service",
+    "Pet Friendly",
+    "Airport Shuttle",
+    "Restaurant",
+    "Bar",
+    "Spa",
+    "Elevator",
+    "Wheelchair Accessible",
+    "TV",
+    "Kitchen",
+    "Balcony",
+    "Sea View",
+    "Mountain View",
+    "Workspace",
+    "Security",
+    "Housekeeping"
+  ];
 
   const [error, setError] = useState('');
 
@@ -25,7 +54,8 @@ const EditListing = () => {
           description: res.data.description,
           price: res.data.price,
           location: res.data.location,
-          totalRooms: res.data.totalRooms || 1
+          totalRooms: res.data.totalRooms || 1,
+          amenities: res.data.amenities || [],
         });
       } catch (err) {
         console.log("Listing ID:", id);
@@ -140,6 +170,49 @@ const EditListing = () => {
     <small className="text-muted">
       Set 1 for a single property. Increase for hotel-style listings.
     </small>
+  </div>
+
+  <div className="mb-4">
+  <label className="form-label fw-semibold text-white">Amenities</label>
+
+  <div className="d-flex flex-wrap gap-2">
+
+      {AMENITIES_LIST.map((amenity, index) => {
+        const isSelected = formData.amenities.map(a => a.toLowerCase()).includes(amenity.toLowerCase());
+
+        return (
+          <span
+            key={index}
+            onClick={() => {
+              if (isSelected) {
+                setFormData({
+                  ...formData,
+                  amenities: formData.amenities.filter(a => a !== amenity)
+                });
+              } else {
+                setFormData({
+                  ...formData,
+                  amenities: [...formData.amenities, amenity]
+                });
+              }
+            }}
+            style={{
+              cursor: 'pointer',
+              padding: '6px 12px',
+              borderRadius: '20px',
+              fontSize: '14px',
+              border: isSelected ? '1px solid #0d6efd' : '1px solid #555',
+              backgroundColor: isSelected ? '#0d6efd' : 'transparent',
+              color: isSelected ? '#fff' : '#ccc',
+              transition: '0.2s'
+            }}
+          >
+            {amenity}
+          </span>
+        );
+      })}
+
+    </div>
   </div>
 
   <button className="btn btn-primary w-100">

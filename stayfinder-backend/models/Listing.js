@@ -43,6 +43,11 @@ const listingSchema = new mongoose.Schema({
     type: Boolean,
     default: true, 
   },
+  amenities: [
+    {
+      type: String
+    }
+  ],
   reviews: [reviewSchema],
   averageRating: {
     type: Number,

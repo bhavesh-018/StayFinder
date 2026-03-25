@@ -30,6 +30,141 @@ const ListingDetails = () => {
     if (rating >= 2) return "Average";
     return "Poor";
   };
+  const [showAllAmenities, setShowAllAmenities] = useState(false);
+  const visibleAmenities = showAllAmenities ? listing?.amenities : listing?.amenities?.slice(0, 10);
+
+  const amenityConfig = {
+    "Free Wi-Fi": {
+      icon: "fa-wifi",
+      color: "text-info",
+      bg: "bg-primary-subtle"
+    },
+    "Air Conditioning": {
+      icon: "fa-snowflake",
+      color: "text-info",
+      bg: "bg-info-subtle"
+    },
+    "Heating": {
+      icon: "fa-fire",
+      color: "text-danger",
+      bg: "bg-danger-subtle"
+    },
+    "Parking": {
+      icon: "fa-car",
+      color: "text-secondary",
+      bg: "bg-secondary-subtle"
+    },
+    "Free Cancellation": {
+      icon: "fa-check-circle",
+      color: "text-success",
+      bg: "bg-success-subtle"
+    },
+    "Breakfast Included": {
+      icon: "fa-utensils",
+      color: "text-warning",
+      bg: "bg-warning-subtle"
+    },
+    "24/7 Front Desk": {
+      icon: "fa-concierge-bell",
+      color: "text-warning",
+      bg: "bg-warning-subtle"
+    },
+    "Swimming Pool": {
+      icon: "fa-swimmer",
+      color: "text-primary",
+      bg: "bg-primary-subtle"
+    },
+    "Gym": {
+      icon: "fa-dumbbell",
+      color: "text-danger",
+      bg: "bg-danger-subtle"
+    },
+    "Laundry Service": {
+      icon: "fa-soap",
+      color: "text-info",
+      bg: "bg-info-subtle"
+    },
+    "Room Service": {
+      icon: "fa-bell",
+      color: "text-warning",
+      bg: "bg-warning-subtle"
+    },
+    "Pet Friendly": {
+      icon: "fa-paw",
+      color: "text-success",
+      bg: "bg-success-subtle"
+    },
+    "Airport Shuttle": {
+      icon: "fa-shuttle-van",
+      color: "text-info",
+      bg: "bg-info-subtle"
+    },
+    "Restaurant": {
+      icon: "fa-utensils",
+      color: "text-secondary",
+      bg: "bg-secondary-subtle"
+    },
+    "Bar": {
+      icon: "fa-glass-martini-alt",
+      color: "text-danger",
+      bg: "bg-danger-subtle"
+    },
+    "Spa": {
+      icon: "fa-spa",
+      color: "text-success",
+      bg: "bg-success-subtle"
+    },
+    "Elevator": {
+      icon: "fa-arrow-up",
+      color: "text-secondary",
+      bg: "bg-secondary-subtle"
+    },
+    "Wheelchair Accessible": {
+      icon: "fa-wheelchair",
+      color: "text-primary",
+      bg: "bg-primary-subtle"
+    },
+    "TV": {
+      icon: "fa-tv",
+      color: "text-secondary",
+      bg: "bg-secondary-subtle"
+    },
+    "Kitchen": {
+      icon: "fa-kitchen-set",
+      color: "text-warning",
+      bg: "bg-warning-subtle"
+    },
+    "Balcony": {
+      icon: "fa-building",
+      color: "text-info",
+      bg: "bg-info-subtle"
+    },
+    "Sea View": {
+      icon: "fa-water",
+      color: "text-primary",
+      bg: "bg-primary-subtle"
+    },
+    "Mountain View": {
+      icon: "fa-mountain",
+      color: "text-success",
+      bg: "bg-success-subtle"
+    },
+    "Workspace": {
+      icon: "fa-laptop",
+      color: "text-dark",
+      bg: "bg-light"
+    },
+    "Security": {
+      icon: "fa-shield-alt",
+      color: "text-danger",
+      bg: "bg-danger-subtle"
+    },
+    "Housekeeping": {
+      icon: "fa-broom",
+      color: "text-secondary",
+      bg: "bg-secondary-subtle"
+    }
+  };
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -43,6 +178,18 @@ const ListingDetails = () => {
     };
     fetchListing();
   }, [id, page]);
+
+  useEffect(() => {
+    if (showAllAmenities) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [showAllAmenities]);
 
   const formatDate = (date) => {
   return date.toISOString().split('T')[0];  // "2025-06-18"
@@ -309,10 +456,93 @@ const ListingDetails = () => {
   </button>
 )}
       </div>
+      <div
+        className="card border-0 shadow-sm mt-4"
+        style={{
+          borderRadius: '16px',
+          background: 'rgba(255,255,255,0.04)',
+          backdropFilter: 'blur(10px)'
+        }}
+        >
+          <div className="p-3">
+            <h6 className="fw-bold mb-3">Amenities</h6>
+            <div className="d-flex flex-column gap-2">
+              {visibleAmenities?.map((amenity, index) => {
+                const config = amenityConfig[amenity] || {
+                  icon: "fa-check",
+                  color: "text-light"
+                };
+
+                return (
+                  <div
+                    key={index}
+                    className="amenity-row d-flex align-items-center justify-content-between px-3 py-2"
+                  >
+                    <div className="d-flex align-items-center gap-3">
+                      <div className="amenity-icon-box">
+                        <i className={`fa ${config.icon} ${config.color}`}></i>
+                      </div>
+                      <span className="amenity-text">{amenity}</span>
+                    </div>
+                    <i className="fa fa-check text-success small"></i>
+                  </div>
+                );
+              })}
+              {listing.amenities?.length > 10 && (
+                  <div className="text-center mt-3">
+                    <button
+                      className="btn btn-outline-light btn-sm"
+                      onClick={() => setShowAllAmenities(true)}
+                    >
+                      View all amenities
+                    </button>
+                  </div>
+                )}
+            </div>
+          </div>
+      </div>
     </div>
   </div>
 </div>
 
+{showAllAmenities && (
+  <div className="custom-modal-wrapper">
+    {/* BACKDROP */}
+    <div
+      className="custom-backdrop"
+      onClick={() => setShowAllAmenities(false)}
+    />
+    {/* MODAL */}
+    <div className="custom-modal-container">
+      {/* HEADER */}
+      <div className="custom-modal-header">
+        <h5>All Amenities ({listing?.amenities?.length || 0})</h5>
+        <button onClick={() => setShowAllAmenities(false)}>✕</button>
+      </div>
+      {/* BODY */}
+      <div className="custom-modal-body">
+        <div className="row g-3 mx-0">
+          {listing?.amenities?.map((amenity, index) => {
+            const config = amenityConfig[amenity] || {
+              icon: "fa-check",
+              color: "text-light"
+            };
+            return (
+              <div key={index} className="col-md-6">
+                <div className="amenity-modal-item d-flex align-items-center gap-3 p-3">
+                  <div className="amenity-icon-box">
+                    <i className={`fa ${config.icon} ${config.color}`}></i>
+                  </div>
+                  <span>{amenity}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
       {/* Lightbox Integration */}
       {lightboxOpen && (
