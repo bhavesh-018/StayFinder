@@ -43,9 +43,36 @@ exports.getAllListings = async (req, res) => {
 };
 exports.getListingById = async (req, res) => {
   try {
-    const listing = await Listing.findById(req.params.id).populate('owner', 'title');
-    if (!listing) return res.status(404).json({ message: 'Listing not found' });
-    res.json(listing);
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 3;
+
+    const listing = await Listing.findById(req.params.id)
+      .populate('owner', 'name email')
+      .populate('reviews.user', 'name');
+
+    if (!listing) {
+      return res.status(404).json({ message: 'Listing not found' });
+    }
+
+    const totalReviews = listing.reviews.length;
+
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    const sortedReviews = [...listing.reviews].sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+
+    const paginatedReviews = sortedReviews.slice(start, end);
+
+    res.json({
+      ...listing.toObject(),
+      reviews: paginatedReviews,
+      totalReviews,
+      totalPages: Math.ceil(totalReviews / limit),
+      currentPage: page
+    });
+
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -121,16 +148,15 @@ exports.deleteListing = async (req, res) => {
 exports.addReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
-    const listing = await Listing.findById(req.params.id);
-
+    const listing = await Listing.findById(req.params.id).populate('owner', 'name email').populate('reviews.user', 'name');
     if (!listing) {
       return res.status(404).json({ message: 'Listing not found' });
     }
 
-    // Optional: check if the user has already reviewed
     const alreadyReviewed = listing.reviews.find(
       (r) => r.user.toString() === req.user._id.toString()
     );
+
     if (alreadyReviewed) {
       return res.status(400).json({ message: 'You already reviewed this listing' });
     }
@@ -143,13 +169,17 @@ exports.addReview = async (req, res) => {
 
     listing.reviews.push(review);
 
-    // Recalculate average rating
-    listing.averageRating =
-      listing.reviews.reduce((acc, item) => item.rating + acc, 0) /
-      listing.reviews.length;
+    // ✅ Calculate average properly
+    const total = listing.reviews.reduce((acc, item) => acc + item.rating, 0);
+
+    listing.averageRating = Number(
+      (total / listing.reviews.length).toFixed(1)
+    );
 
     await listing.save();
+
     res.status(201).json({ message: 'Review added', listing });
+
   } catch (err) {
     console.error('Review Error:', err);
     res.status(500).json({ message: 'Server error' });

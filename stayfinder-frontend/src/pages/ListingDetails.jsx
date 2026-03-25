@@ -17,18 +17,32 @@ const ListingDetails = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
   const token = localStorage.getItem('token');
+  const [reviewData, setReviewData] = useState({
+    rating: 5,
+    comment: ''
+  });
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const getRatingLabel = (rating) => {
+    if (rating >= 4.5) return "Excellent";
+    if (rating >= 4) return "Very Good";
+    if (rating >= 3) return "Good";
+    if (rating >= 2) return "Average";
+    return "Poor";
+  };
 
   useEffect(() => {
     const fetchListing = async () => {
       try {
-        const res = await API.get(`/listings/${id}`);
+        const res = await API.get(`/listings/${id}?page=${page}&limit=3`);
         setListing(res.data);
+        setTotalPages(res.data.totalPages);
       } catch (err) {
         setError('Failed to load listing.');
       }
     };
     fetchListing();
-  }, [id]);
+  }, [id, page]);
 
   const formatDate = (date) => {
   return date.toISOString().split('T')[0];  // "2025-06-18"
@@ -56,6 +70,30 @@ const ListingDetails = () => {
       setTimeout(() => setToast(''), 3000);
     }
   };
+
+  const handleReviewSubmit = async () => {
+    if (!reviewData.rating || !reviewData.comment.trim()) {
+      return alert("Please add rating and comment");
+    }
+    try {
+      await API.post(
+        `/listings/${id}/reviews`,
+        reviewData,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+
+      // refresh listing
+      const res = await API.get(`/listings/${id}`);
+      setListing(res.data);
+
+      setReviewData({ rating: 5, comment: '' });
+
+    } catch (err) {
+      console.log(err);
+    }
+};
 
   const openLightbox = (index) => {
     setCurrentImageIndex(index);
@@ -124,20 +162,6 @@ const ListingDetails = () => {
       </p>
 
     </div>
-    <div className="mt-3 d-flex flex-wrap gap-2">
-  <span className="badge bg-light text-success border border-success px-3 py-2 fw-semibold">
-    <i className="fa fa-check-circle me-1"></i> Free Cancellation
-  </span>
-  <span className="badge bg-light text-info border border-info px-3 py-2 fw-semibold">
-    <i className="fa fa-wifi me-1"></i> Free Wi-Fi
-  </span>
-  <span className="badge bg-light text-secondary border border-secondary px-3 py-2 fw-semibold">
-    <i className="fa fa-utensils me-1"></i> Breakfast Included
-  </span>
-  <span className="badge bg-light text-warning border border-warning px-3 py-2 fw-semibold">
-    <i className="fa fa-concierge-bell me-1"></i> 24/7 Front Desk
-  </span>
-</div>
 
 
     {/* Divider */}
@@ -148,6 +172,89 @@ const ListingDetails = () => {
       {listing.description}
     </p>
 
+    {/* Reviews Section */}
+    <div className="card border-0 shadow-sm p-4 rounded-4 bg-light mt-4" style={{marginLeft: '20px', width: '93%'}}>
+      <h4 className="fw-bold mb-3">Reviews</h4>
+
+      {listing.reviews && listing.reviews.length > 0 ? (
+        listing.reviews.map((review, idx) => (
+          <div key={idx} className="mb-3 border-bottom pb-2">
+            <div className="d-flex justify-content-between">
+              <strong>{review.user?.name || "User"}</strong>
+              <span className="text-warning">
+                ⭐ {review.rating}
+              </span>
+            </div>
+            <p className="mb-1">{review.comment}</p>
+            <small className="text-muted">
+              {new Date(review.createdAt).toLocaleDateString()}
+            </small>
+          </div>
+        ))
+      ) : (
+        <p className="text-muted">No reviews yet.</p>
+      )}
+
+      <div className="d-flex justify-content-between mt-3">
+          <button
+            className="btn btn-outline-primary"
+            disabled={page === 1}
+            onClick={() => setPage(prev => prev - 1)}
+          >
+            Prev
+          </button>
+
+          <span className="align-self-center">
+            Page {page} of {totalPages}
+          </span>
+
+          <button
+            className="btn btn-outline-primary"
+            disabled={page === totalPages}
+            onClick={() => setPage(prev => prev + 1)}
+          >
+            Next
+          </button>
+      </div>
+
+      <hr/>
+      {user && (
+      <div className="mt-4">
+        <h5>Add Review</h5>
+
+        <div className="mb-2">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span
+          key={star}
+          style={{
+            cursor: 'pointer',
+            fontSize: '22px',
+            color: star <= reviewData.rating ? '#ffc107' : '#e4e5e9',
+          }}
+          onClick={() =>
+            setReviewData({ ...reviewData, rating: star })
+          }
+        >
+          ★
+        </span>
+      ))}
+    </div>
+    <textarea
+      className="form-control mb-2"
+      placeholder="Write your review..."
+      value={reviewData.comment}
+      onChange={(e) => setReviewData({ ...reviewData, comment: e.target.value })}
+    />
+
+    <button className="btn btn-success" onClick={handleReviewSubmit}>
+      Submit Review
+    </button>
+  </div>
+)}
+</div>
+
+
+
     {/* Perks / Tags */}
     
   </div>
@@ -155,21 +262,36 @@ const ListingDetails = () => {
 
         {/* Right: Ratings + Pricing */}
         <div className="col-md-5">
-        <div className="card shadow-sm p-4" style={{width: '90%'}}>
-            <div className="d-flex align-items-center gap-3 mb-3">
-  <div className="bg-primary text-white rounded p-2 px-3 fw-bold" style={{ fontSize: '18px', marginRight: '10px' }}>
-    8.1
-  </div>
-  <div>
-    <div className="fw-semibold">Excellent</div>
-    <div className="text-muted" style={{ fontSize: '14px' }}>
-      Based on {listing.reviews?.length || 4234} reviews
-    </div>
-  </div>
-</div>
+          <div className="card shadow-sm p-4" style={{width: '90%'}}>
+            <div className="d-flex align-items-center gap-3 mb-3"  style={{ gap: '15px' }}>
+              <div className="d-flex align-items-center justify-content-center fw-bold"
+                style={{
+                  backgroundColor: '#f4b35e',
+                  color: '#fff',
+                  borderRadius: '8px',
+                  width: '50px',
+                  height: '50px',
+                  fontSize: '18px'
+                }}>
+                {listing.reviews?.length > 0 ? listing.averageRating.toFixed(1) : "New"}
+              </div>
+              <div>
+                <div className="fw-semibold">
+                  {listing.reviews?.length > 0 ? getRatingLabel(listing.averageRating) : "No ratings yet"}
+                </div>
+                {listing.reviews && listing.reviews.length > 0 ? (
+                  <div className="text-muted" style={{ fontSize: '14px' }}>
+                    Based on {listing.reviews.length} review{listing.reviews.length > 1 ? 's' : ''}
+                  </div>
+                ) : (
+                  <div className="text-muted" style={{ fontSize: '14px' }}>
+                    No reviews yet
+                  </div>
+                )}
+              </div>
+          </div>
 
         <hr />
-
         <div className="mb-3">
           <h5 className="mb-1"><span className="text-primary">₹{listing.price}</span> / night</h5>
           <p className="text-muted mb-0" style={{ fontSize: '13px' }}>Includes taxes & fees</p>
