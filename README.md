@@ -82,7 +82,8 @@ npm start
 ![search_results](public/screenshots/search_results.png)
 
 ### 3. 🏡 Listing Details
-![listing_details](public/screenshots/listing_details.png)
+![listing_details](public/screenshots/listing_details_1.png)
+![](public/screenshots/listing_details_2.png)
 
 ### 4. 🗓️ Booking Modal
 ![booking_modal](public/screenshots/booking_modal.png)
