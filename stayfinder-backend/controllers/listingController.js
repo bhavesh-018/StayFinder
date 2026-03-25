@@ -69,7 +69,7 @@ exports.getListingById = async (req, res) => {
       ...listing.toObject(),
       reviews: paginatedReviews,
       totalReviews,
-      totalPages: Math.ceil(totalReviews / limit),
+      totalPages: Math.max(1, Math.ceil(totalReviews / limit)),
       currentPage: page
     });
 
@@ -105,7 +105,7 @@ exports.updateListing = async (req, res) => {
     }
 
     // Update fields from req.body
-    const { title, description, location, price } = req.body;
+    const { title, description, location, price, totalRooms} = req.body;
     if (title) listing.title = title;
     if (description) listing.description = description;
     if (location) listing.location = location;
