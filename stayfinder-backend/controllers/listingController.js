@@ -8,18 +8,21 @@ exports.createListing = async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    if (!images || !Array.isArray(images) || images.length === 0) {
+    if (!req.files || req.files.length === 0) {
       return res.status(400).json({ message: 'At least one image is required' });
     }
+
     if (totalRooms && totalRooms < 1) {
       return res.status(400).json({ message: 'totalRooms must be at least 1' });
     }
+
+    const imagePaths = req.files.map(file => file.path || file.secure_url);
     const listing = new Listing({
       title,
       description,
       location,
       price,
-      images,
+      images: imagePaths,
       totalRooms: totalRooms || 1,
       owner: req.user._id,
     });
