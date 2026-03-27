@@ -1,5 +1,6 @@
 const Booking = require('../models/Booking');
 const Listing = require('../models/Listing');
+const mongoose = require('mongoose');
 
 const formatDate = (date) => {
   const parsed = new Date(date);
@@ -8,62 +9,94 @@ const formatDate = (date) => {
 };
 
 exports.createBooking = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  console.log("🚀 Transaction started");
+
   try {
     const { listingId, checkIn, checkOut, roomsBooked } = req.body;
     const userId = req.user.id || req.user;
 
-    // Validate required fields
     if (!listingId || !checkIn || !checkOut) {
-      return res.status(400).json({ message: 'Missing required fields' });
+      throw new Error('Missing required fields');
     }
 
-    // Find the listing
-    const listing = await Listing.findById(listingId);
-    if (!listing) {
-      return res.status(404).json({ message: 'Listing not found' });
-    }
-
-    // Prevent owner from booking their own listing
-    if (listing.owner.toString() === userId.toString()) {
-      return res.status(403).json({ message: 'You cannot book your own listing' });
-    }
-
-    // Calculate number of nights
     const start = new Date(checkIn);
     const end = new Date(checkOut);
-    const nights = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
 
-    if (nights <= 0) {
-      return res.status(400).json({ message: 'Invalid date range' });
+    if (start >= end) {
+      throw new Error('Invalid date range');
     }
 
+    const listing = await Listing.findById(listingId).session(session);
+
+    if (!listing) {
+      throw new Error('Listing not found');
+    }
+
+    if (listing.owner.toString() === userId.toString()) {
+      throw new Error('You cannot book your own listing');
+    }
+
+    const overlappingBookings = await Booking.find({
+      listing: listingId,
+      status: { $ne: 'CANCELLED' },
+      checkIn: { $lt: end },
+      checkOut: { $gt: start }
+    }).session(session);
+
+    const roomsAlreadyBooked = overlappingBookings.reduce(
+      (sum, booking) => sum + (booking.roomsBooked || 1),
+      0
+    );
+
+    const availableRooms = listing.totalRooms - roomsAlreadyBooked;
+
+    const requestedRooms = Number(roomsBooked) || 1;
+
+    if(availableRooms <= 0) {
+      throw new Error('No rooms available for selected dates');
+    }
+
+    if (availableRooms < requestedRooms) {
+      throw new Error(
+        `Only ${availableRooms} rooms available for selected dates`
+      );
+    }
+
+    const nights = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
     const totalPrice = nights * listing.price;
 
-    const booking = new Booking({
+    const booking = await Booking.create([{
       listing: listingId,
       user: userId,
-      checkIn: formatDate(checkIn),
-      checkOut: formatDate(checkOut),
+      checkIn: start,
+      checkOut: end,
       price: totalPrice,
-      roomsBooked,
-    });
+      roomsBooked: Number(roomsBooked) || 1,
+    }], { session });
 
-    await booking.save();
+    await session.commitTransaction();
+    console.log("✅ Transaction committed");
+    session.endSession();
 
     res.status(201).json({
-      _id: booking._id,
-      status: booking.status,
-      listing: booking.listing,
-      user: booking.user,
-      checkIn: formatDate(booking.checkIn),
-      checkOut: formatDate(booking.checkOut),
-      totalPrice: booking.totalPrice,
-      roomsBooked: booking.roomsBooked
+      ...booking[0]._doc,
+      checkIn: formatDate(booking[0].checkIn),
+      checkOut: formatDate(booking[0].checkOut),
     });
 
   } catch (err) {
-    console.error('❌ ERROR in createBooking:', err);
-    res.status(500).json({ message: 'Server error' });
+    await session.abortTransaction();
+    console.log("❌ Transaction aborted");
+    session.endSession();
+
+    console.error('ERROR in createBooking:', err.message);
+
+    res.status(400).json({
+      message: err.message || 'Booking failed'
+    });
   }
 };
 
