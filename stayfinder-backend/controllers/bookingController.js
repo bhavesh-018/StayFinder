@@ -12,8 +12,6 @@ exports.createBooking = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
-  console.log("🚀 Transaction started");
-
   try {
     const { listingId, checkIn, checkOut, roomsBooked } = req.body;
     const userId = req.user.id || req.user;
@@ -78,7 +76,6 @@ exports.createBooking = async (req, res) => {
     }], { session });
 
     await session.commitTransaction();
-    console.log("✅ Transaction committed");
     session.endSession();
 
     res.status(201).json({
@@ -89,7 +86,6 @@ exports.createBooking = async (req, res) => {
 
   } catch (err) {
     await session.abortTransaction();
-    console.log("❌ Transaction aborted");
     session.endSession();
 
     console.error('ERROR in createBooking:', err.message);
