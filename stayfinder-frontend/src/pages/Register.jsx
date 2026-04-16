@@ -3,22 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import API from '../api/axios';
 
 const Register = () => {
-  const [form, setForm] = useState({ name: '', email: '', password: '', roles: [] });
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
   const navigate = useNavigate();
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleRoleChange = (role) => {
-    setForm(prev => {
-      const hasRole = prev.roles.includes(role);
-      return {
-        ...prev,
-        roles: hasRole ? prev.roles.filter(r => r !== role) : [...prev.roles, role],
-      };
-    });
   };
 
   const handleSubmit = async (e) => {
@@ -34,43 +24,135 @@ const Register = () => {
   };
 
   return (
+  <div
+    style={{
+      minHeight: '100vh',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundImage:
+        "linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('/images/hero_4.jpg')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      padding: '20px'
+    }}
+  >
     <div
       style={{
-        minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        width: '100%',
+        maxWidth: '420px',
+        background: 'rgba(255,255,255,0.12)',
+        backdropFilter: 'blur(14px)',
+        borderRadius: '24px',
+        padding: '36px',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
+        border: '1px solid rgba(255,255,255,0.2)',
+        color: 'white'
       }}
     >
-    <div className="container" style={{ maxWidth: '400px' }}>
-      <div className="card shadow p-4 border-0">
-      <h2 className="mb-3 text-center">Register</h2>
-      {error && <div className="alert alert-danger">{error}</div>}
+      <h2
+        style={{
+          textAlign: 'center',
+          marginBottom: '24px',
+          fontSize: '32px',
+          fontWeight: '700',
+          color: 'white'
+        }}
+      >
+        Create your account
+      </h2>
+
+      {error && (
+        <div className="alert alert-danger">
+          {error}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit}>
-        <input className="form-control mb-3" name="name" placeholder="Name" value={form.name} onChange={handleChange} required />
-        <input type="email" className="form-control mb-3" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-        <input type="password" className="form-control mb-3" name="password" placeholder="Password" value={form.password} onChange={handleChange} required />
+        <input
+          className="form-control mb-3"
+          name="name"
+          placeholder="Full Name"
+          value={form.name}
+          onChange={handleChange}
+          required
+          style={{
+            padding: '12px',
+            borderRadius: '12px',
+            border: 'none'
+          }}
+        />
 
-        <label className="mb-1">Roles:</label>
-        <div className="form-check">
-          <input type="checkbox" className="form-check-input" id="guest" onChange={() => handleRoleChange('guest')} />
-          <label className="form-check-label" htmlFor="guest">Guest</label>
-        </div>
-        <div className="form-check mb-3">
-          <input type="checkbox" className="form-check-input" id="host" onChange={() => handleRoleChange('host')} />
-          <label className="form-check-label" htmlFor="host">Host</label>
-        </div>
+        <input
+          type="email"
+          className="form-control mb-3"
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+          style={{
+            padding: '12px',
+            borderRadius: '12px',
+            border: 'none'
+          }}
+        />
 
-        <button className="btn btn-success w-100" type="submit">Register</button>
+        <input
+          type="password"
+          className="form-control mb-4"
+          name="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={handleChange}
+          required
+          style={{
+            padding: '12px',
+            borderRadius: '12px',
+            border: 'none'
+          }}
+        />
+
+        <button
+          type="submit"
+          style={{
+            width: '100%',
+            padding: '12px',
+            borderRadius: '999px',
+            border: 'none',
+            fontWeight: '600',
+            fontSize: '16px',
+            background: 'white',
+            color: 'black',
+            cursor: 'pointer'
+          }}
+        >
+          Register
+        </button>
       </form>
-      <p className="mt-3 text-center">
-  Already a user? <Link to="/login">Login</Link>
-</p>
-</div>
 
+      <p
+        style={{
+          marginTop: '20px',
+          textAlign: 'center',
+          color: 'white'
+        }}
+      >
+        Already a user?{' '}
+        <Link
+          to="/login"
+          style={{
+            color: 'white',
+            fontWeight: '600',
+            textDecoration: 'underline'
+          }}
+        >
+          Login
+        </Link>
+      </p>
     </div>
-    </div>
-  );
+  </div>
+);
 };
 
 export default Register;
