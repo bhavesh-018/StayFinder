@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import API from '../api/axios';
+import { useEffect } from 'react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const [error, setError] = useState('');
+  const location = useLocation();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -14,11 +16,24 @@ const Login = () => {
       const res = await API.post('/auth/login', { email, password });
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
-      navigate('/', { state: { loginSuccess: true } });
+      navigate(location.state?.redirectTo || '/', { state: { loginSuccess: true } });
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }
   };
+
+  const [toast, setToast] = useState(
+    location.state?.toast || ''
+  );
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => {
+        setToast('');
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
 
   return (
   <div
@@ -74,7 +89,16 @@ const Login = () => {
           {error}
         </div>
       )}
-
+      {toast && (
+        <div
+          className="alert alert-warning"
+          style={{
+            borderRadius: '12px'
+          }}
+        >
+          {toast}
+        </div>
+      )}
       <form onSubmit={handleLogin}>
         <input
           type="email"

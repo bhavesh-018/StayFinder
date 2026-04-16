@@ -446,11 +446,33 @@ const ListingDetails = () => {
 
         {user && user._id === listing.owner?._id ? (
   <div className="text-success fw-semibold text-center mt-2">
-     <span class="badge badge-pill badge-success fw-semibold"  style={{ fontSize: '1rem', padding: '10px 20px', borderRadius: '999px' }}>You own this listing</span></div>
+    <span
+      className="badge badge-pill badge-success fw-semibold"
+      style={{
+        fontSize: '1rem',
+        padding: '10px 20px',
+        borderRadius: '999px'
+      }}
+    >
+      You own this listing
+    </span>
+  </div>
 ) : (
   <button
     className="btn btn-primary w-100 mt-2"
-    onClick={() => setShowModal(true)}
+    onClick={() => {
+      if (!token) {
+        navigate('/login', {
+          state: {
+            redirectTo: `/listings/${id}`,
+            toast: 'Please login to continue booking'
+          }
+        });
+        return;
+      }
+
+      setShowModal(true);
+    }}
   >
     Book Now
   </button>
