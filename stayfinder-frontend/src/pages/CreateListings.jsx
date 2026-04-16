@@ -101,150 +101,288 @@ const CreateListing = () => {
   };
 
   return (
-    <div className="container" style={{ maxWidth: '600px', marginTop: '90px' }}>
-      
-       <h2 className="mb-3 text-center text-white">Create New Listing</h2>
-
-  <div className="mb-4 text-center">
-    <h4 className="fw-bold text-white">“Turn your space into an opportunity.”</h4>
-    <p className="text-muted text-white">Share your home with the world and start earning with StayFinder.</p>
-  </div>
-
-      {error && <div className="alert alert-danger">{error}</div>}
-      <form onSubmit={handleSubmit}>
-
-  <div className="mb-3">
-    <label className="form-label text-white">Title</label>
-    <input
-      type="text"
-      name="title"
-      className="form-control"
-      value={formData.title}
-      onChange={handleChange}
-      required
-    />
-  </div>
-
-  <div className="mb-3">
-    <label className="form-label text-white">Description</label>
-    <textarea
-      name="description"
-      className="form-control"
-      value={formData.description}
-      onChange={handleChange}
-      rows={4}
-      required
-    />
-  </div>
-
-  <div className="mb-3">
-    <label className="form-label text-white">Price per Night</label>
-    <input
-      type="number"
-      name="price"
-      className="form-control"
-      value={formData.price}
-      onChange={handleChange}
-      required
-    />
-  </div>
-
-  <div className="mb-3">
-    <label className="form-label text-white">Location</label>
-    <input
-      type="text"
-      name="location"
-      className="form-control"
-      value={formData.location}
-      onChange={handleChange}
-      required
-    />
-  </div>
-
-  <div className="mb-3">
-    <label className="form-label text-white">Total Rooms</label>
-    <input
-      type="number"
-      name="totalRooms"
-      className="form-control"
-      value={formData.totalRooms}
-      onChange={handleChange}
-      min="1"
-      required
-    />
-  </div>
-
-  <div className="mb-3">
-  <label className="form-label text-white">Amenities</label>
-
-  <div className="d-flex flex-wrap gap-2">
-
-    {AMENITIES_LIST.map((amenity, index) => {
-      const isSelected = formData.amenities.includes(amenity);
-
-      return (
-        <span
-          key={index}
-          onClick={() => {
-            if (isSelected) {
-              setFormData({
-                ...formData,
-                amenities: formData.amenities.filter(a => a !== amenity)
-              });
-            } else {
-              setFormData({
-                ...formData,
-                amenities: [...formData.amenities, amenity]
-              });
-            }
-          }}
+  <div
+    style={{
+      minHeight: '100vh',
+      padding: '100px 20px 40px',
+      backgroundImage:
+        "linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('/images/hero_4.jpg')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }}
+  >
+    <div
+      style={{
+        maxWidth: '820px',
+        margin: '0 auto',
+        background: 'rgba(255,255,255,0.12)',
+        backdropFilter: 'blur(14px)',
+        borderRadius: '28px',
+        padding: '36px',
+        boxShadow: '0 12px 40px rgba(0,0,0,0.25)',
+        border: '1px solid rgba(255,255,255,0.2)'
+      }}
+    >
+      <div className="mb-4 text-center">
+        <h2
           style={{
-            cursor: 'pointer',
-            padding: '6px 12px',
-            borderRadius: '20px',
-            fontSize: '14px',
-            border: isSelected ? '1px solid #0d6efd' : '1px solid #555',
-            backgroundColor: isSelected ? '#0d6efd' : 'transparent',
-            color: isSelected ? '#fff' : '#ccc',
-            transition: '0.2s'
+            color: 'white',
+            fontWeight: '700',
+            marginBottom: '10px'
           }}
         >
-          {amenity}
-        </span>
-      );
-    })}
+          Create New Listing
+        </h2>
 
-  </div>
-</div>
+        <p
+          style={{
+            color: 'rgba(255,255,255,0.85)',
+            margin: 0
+          }}
+        >
+          Turn your space into an opportunity
+        </p>
+      </div>
 
-  <div className="mb-3">
-    <label className="form-label text-white">Upload Images</label>
-    <input
-      type="file"
-      accept="image/*"
-      multiple
-      className="form-control"
-      onChange={handleImageUpload}
-    />
-  </div>
+      {error && (
+        <div className="alert alert-danger">
+          {error}
+        </div>
+      )}
 
-  {uploading && <p className="text-white">Uploading images...</p>}
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label className="form-label text-white">
+            Title
+          </label>
+          <input
+            type="text"
+            name="title"
+            className="form-control"
+            value={formData.title}
+            onChange={handleChange}
+            required
+            style={{
+              borderRadius: '14px',
+              padding: '12px'
+            }}
+          />
+        </div>
 
-  {images.length > 0 && (
-    <div className="mb-3">
-      {images.map((img, i) => (
-        <img key={i} src={img} alt="Uploaded" width={80} className="me-2 mb-2" />
-      ))}
+        <div className="mb-3">
+          <label className="form-label text-white">
+            Description
+          </label>
+          <textarea
+            name="description"
+            className="form-control"
+            value={formData.description}
+            onChange={handleChange}
+            rows={4}
+            required
+            style={{
+              borderRadius: '14px',
+              padding: '12px'
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns:
+              '1fr 1fr',
+            gap: '16px'
+          }}
+        >
+          <div className="mb-3">
+            <label className="form-label text-white">
+              Price per Night
+            </label>
+            <input
+              type="number"
+              name="price"
+              className="form-control"
+              value={formData.price}
+              onChange={handleChange}
+              required
+              style={{
+                borderRadius: '14px',
+                padding: '12px'
+              }}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label text-white">
+              Total Rooms
+            </label>
+            <input
+              type="number"
+              name="totalRooms"
+              className="form-control"
+              value={formData.totalRooms}
+              onChange={handleChange}
+              min="1"
+              required
+              style={{
+                borderRadius: '14px',
+                padding: '12px'
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label text-white">
+            Location
+          </label>
+          <input
+            type="text"
+            name="location"
+            className="form-control"
+            value={formData.location}
+            onChange={handleChange}
+            required
+            style={{
+              borderRadius: '14px',
+              padding: '12px'
+            }}
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="form-label text-white">
+            Amenities
+          </label>
+
+          <div
+            className="d-flex flex-wrap gap-2"
+            style={{
+              marginTop: '10px'
+            }}
+          >
+            {AMENITIES_LIST.map(
+              (amenity, index) => {
+                const isSelected =
+                  formData.amenities.includes(
+                    amenity
+                  );
+
+                return (
+                  <span
+                    key={index}
+                    onClick={() => {
+                      if (isSelected) {
+                        setFormData({
+                          ...formData,
+                          amenities:
+                            formData.amenities.filter(
+                              (a) =>
+                                a !== amenity
+                            )
+                        });
+                      } else {
+                        setFormData({
+                          ...formData,
+                          amenities: [
+                            ...formData.amenities,
+                            amenity
+                          ]
+                        });
+                      }
+                    }}
+                    style={{
+                      cursor: 'pointer',
+                      padding:
+                        '8px 14px',
+                      borderRadius:
+                        '999px',
+                      fontSize: '14px',
+                      border:
+                        isSelected
+                          ? '1px solid #fff'
+                          : '1px solid rgba(255,255,255,0.3)',
+                      backgroundColor:
+                        isSelected
+                          ? '#2563eb'
+                          : 'rgba(255,255,255,0.08)',
+                      color: '#fff',
+                      transition:
+                        '0.2s ease'
+                    }}
+                  >
+                    {amenity}
+                  </span>
+                );
+              }
+            )}
+          </div>
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label text-white">
+            Upload Images
+          </label>
+
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            className="form-control"
+            onChange={
+              handleImageUpload
+            }
+            style={{
+              borderRadius: '14px',
+              padding: '10px'
+            }}
+          />
+        </div>
+
+        {uploading && (
+          <p className="text-white">
+            Uploading images...
+          </p>
+        )}
+
+        {images.length > 0 && (
+          <div className="mb-3 d-flex flex-wrap gap-2">
+            {images.map((img, i) => (
+              <img
+                key={i}
+                src={img}
+                alt="Uploaded"
+                style={{
+                  width: '90px',
+                  height: '90px',
+                  objectFit: 'cover',
+                  borderRadius: '12px'
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        <button
+          className="btn w-100"
+          type="submit"
+          disabled={uploading}
+          style={{
+            background: 'white',
+            color: 'black',
+            fontWeight: '600',
+            padding: '12px',
+            borderRadius: '999px',
+            marginTop: '12px'
+          }}
+        >
+          Create Listing
+        </button>
+      </form>
     </div>
-  )}
-
-  <button className="btn btn-primary w-100" type="submit" disabled={uploading}>
-    Create Listing
-  </button>
-
-</form>
-    </div>
-  );
+  </div>
+);
 };
 
 export default CreateListing;

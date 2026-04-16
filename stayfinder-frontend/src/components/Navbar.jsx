@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 const Navbar = () => {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
-  const isTransparentNavbar = location.pathname === '/' || location.pathname === '/host-dashboard';
+  const isTransparentNavbar = location.pathname === '/' || location.pathname === '/host-dashboard' || location.pathname === '/become-host' || location.pathname.startsWith('/listings/');
   const user = JSON.parse(localStorage.getItem('user'));
   const isHost = user?.role?.includes('host');
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
