@@ -57,5 +57,6 @@ const listingSchema = new mongoose.Schema({
 
 listingSchema.index({ location: 1, price: 1 });
 listingSchema.index({ owner: 1 });
+listingSchema.index({ title: 1 });
 
 module.exports = mongoose.model('Listing', listingSchema);
