@@ -132,7 +132,7 @@ const [guests, setGuest] = useState(initialGuests);
                 <DatePicker
                   selected={checkIn}
                   onChange={(date) => setCheckIn(date)}
-                  className="form-control"
+                  className="form-control datepicker-input"
                   dateFormat="dd MMMM, yyyy"
                   placeholderText="Select check-in"
                 />
@@ -143,7 +143,7 @@ const [guests, setGuest] = useState(initialGuests);
                 <DatePicker
                   selected={checkOut}
                   onChange={(date) => setCheckOut(date)}
-                  className="form-control"
+                  className="form-control datepicker-input"
                   dateFormat="dd MMMM, yyyy"
                   placeholderText="Select check-out"
                 />
