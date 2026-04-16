@@ -5,9 +5,11 @@ import { useEffect, useState } from 'react';
 const Navbar = () => {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
-  const isHome = location.pathname === '/';
+  const isTransparentNavbar = location.pathname === '/' || location.pathname === '/host-dashboard';
   const user = JSON.parse(localStorage.getItem('user'));
+  const isHost = user?.role?.includes('host');
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+
 
   useEffect(() => {
   const handleScroll = () => {
@@ -18,50 +20,49 @@ const Navbar = () => {
     }
   };
 
-  if (isHome) {
+  if (isTransparentNavbar) {
     window.addEventListener('scroll', handleScroll);
   }
 
   return () => window.removeEventListener('scroll', handleScroll);
-}, [isHome]);
+}, [isTransparentNavbar]);
 // Determine navbar color based on page & scroll
   const backgroundColor = scrolled ?   '#fff' : 'transparent';
   const textColor = scrolled ? 'black' : 'white';
   return (
     <>
       <style>{`
-        .login-btn, .register-btn {
-          border: 1px solid #fff;
-          color: #fff;
-          padding: 6px 14px;
-          border-radius: 999px;
-          margin-right: 15px;
-          transition: 0.3s ease;
-          font-weight: 500;
-        }
-        .login-btn:hover, .register-btn:hover {
-          background-color: white;
-          color: black;
-        }
-          .white-theme {
-      color: white;
-      border: 1px solid white;
-    }
+        .login-btn,
+.register-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-right: 15px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  background: transparent;
+  text-decoration: none;
+  display: inline-block;
+}
 
-    .white-theme:hover {
-      color: black;
-      background-color: white;
-    }
+.white-theme {
+  color: white !important;
+  border: 1px solid white !important;
+}
 
-    .black-theme {
-      color: black;
-      border: 1px solid black;
-    }
+.white-theme:hover {
+  color: black !important;
+  background-color: white !important;
+}
 
-    .black-theme:hover {
-      color: white;
-      background-color: black;
-    }
+.black-theme {
+  color: black !important;
+  border: 1px solid black !important;
+}
+
+.black-theme:hover {
+  color: white !important;
+  background-color: black !important;
+}
         @media (max-width: 768px) {
           .login-btn, .register-btn {
             font-size: 14px;
@@ -82,17 +83,17 @@ const Navbar = () => {
 
 .dropdown-menu-custom {
   position: absolute;
-  top: 40px;
+  top: 48px;
   right: 0;
   background: white;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 999;
-  min-width: 160px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  min-width: 180px;
   display: flex;
   flex-direction: column;
   list-style: none;
-  padding: 0;
+  padding: 8px 0;
   margin: 0;
 }
 
@@ -111,11 +112,43 @@ const Navbar = () => {
 .dropdown-menu-custom button:hover {
   background-color: #f2f2f2;
 }
+  @media (max-width: 768px) {
+  .login-btn,
+  .register-btn {
+    font-size: 13px;
+    padding: 6px 10px;
+    margin-right: 8px;
+    white-space: nowrap;
+  }
+
+  .host-btn-mobile {
+    font-size: 12px !important;
+    padding: 6px 10px !important;
+    white-space: nowrap;
+    min-width: auto !important;
+  }
+
+  .navbar-action-wrapper {
+    gap: 8px !important;
+  }
+    @media (max-width: 768px) {
+  .dropdown-menu-custom {
+    top: 42px;
+    right: 0;
+    min-width: 160px;
+    font-size: 14px;
+  }
+
+  .profile-dropdown-wrapper {
+    margin-right: 0 !important;
+  }
+}
+}
 
       `}</style>
 
       <header className="site-header js-site-header" style={{  backgroundColor,
-        padding: isHome && !scrolled ? '3.5rem 0' : '1.5rem 0',
+        padding: isTransparentNavbar && !scrolled ? '1.8rem 0' : '0.9rem 0',
         transition: 'all 0.3s ease',
         position: 'fixed',
         width: '100%',
@@ -135,8 +168,35 @@ const Navbar = () => {
                   <Link to="/register" className={`register-btn ${textColor === 'black' ? 'black-theme' : 'white-theme'}`}>Register</Link>
                 </>
               )}
-              {user && <ProfileDropdown user={user} iconColor={textColor} />}
+              {user && (
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '16px'
+                  }}
+                >
+                  {!isHost ? (
+                    <Link
+                        to="/become-host"
+                        className={`login-btn ${
+                          textColor === 'black' ? 'black-theme' : 'white-theme'
+                        }`}
+                      >
+                        Become a Host
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/host-dashboard"
+                      className={`login-btn ${textColor === 'black' ? 'black-theme' : 'white-theme'}`}
+                    >
+                      Host Dashboard
+                    </Link>
+                  )}
 
+                  <ProfileDropdown user={user} iconColor={textColor} />
+                </div>
+              )}
             </div>
           </div>
         </div>

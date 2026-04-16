@@ -83,8 +83,7 @@ exports.getListingById = async (req, res) => {
 
 exports.getListingsByOwner = async (req, res) => {
   try {
-    const userId = req.params.userId;
-    const listings = await Listing.find({ owner: userId });
+    const listings = await Listing.find({ owner: req.user.id });
     res.json(listings);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });

@@ -14,12 +14,9 @@ const MyListings = () => {
 
   useEffect(() => {
     const fetchListings = async () => {
-      const user = JSON.parse(localStorage.getItem('user'));
-      console.log(`/listings/user/${user._id}`);
-      if (!user?._id) return;
 
       try {
-        const res = await API.get(`/listings/user/${user._id}`);
+        const res = await API.get('/listings/my-listings');
         console.log(res.data)
         setListings(res.data);
       } catch (err) {

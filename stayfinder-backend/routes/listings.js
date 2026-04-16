@@ -16,7 +16,7 @@ const upload = require('../middleware/cloudinaryStorage');
 // Protected route to create a listing
 
 router.get('/', getAllListings);
-router.get('/user/:userId', verifyToken, authorizeRoles('host'), getListingsByOwner);
+router.get('/my-listings', verifyToken, authorizeRoles('host'), getListingsByOwner);
 router.get('/:id', getListingById);
 router.post('/', verifyToken, authorizeRoles('host'), upload.array('images', 5), createListing);
 router.put('/:id', verifyToken, authorizeRoles('host'), updateListing);

@@ -13,6 +13,8 @@ import FixedBackground from './components/FixedBackground';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import EditListing from './pages/EditListing';
+import BecomeHost from './pages/BecomeHost';
+import HostDashboard from './pages/HostDashboard';
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
         <Route path='/listings/:id' element={<ListingDetails />} />
         <Route path='/bookings' element={<Bookings />} />
         <Route path='/listings/edit/:id' element={<EditListing />} />
+        <Route path="/become-host" element={<BecomeHost />} />
+        <Route path="/host-dashboard" element={<HostDashboard />} />
       </Routes>
     </Router>
     </>

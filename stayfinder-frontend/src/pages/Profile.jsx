@@ -1,95 +1,165 @@
 const Profile = () => {
-  const user = JSON.parse(localStorage.getItem('user')) || {};
+  const user =
+    JSON.parse(localStorage.getItem('user')) || {};
+
+  const initials = user?.name
+    ? user.name
+        .split(' ')
+        .map((word) => word[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase()
+    : 'U';
 
   return (
     <>
-    <style>
-        {
-            `
-            .profile-container {
-  padding: 60px 0;
-  background-color: #f8f9fa;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-}
+      <style>{`
+  .profile-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 100px 20px 40px;
+    background-image:
+      linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+      url('/images/hero_4.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 
-.profile-card {
-  background: #fff;
-  padding: 30px;
-  border-radius: 12px;
-  max-width: 500px;
-  width: 100%;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  animation: fadeIn 0.4s ease-in-out;
-}
+  .profile-card {
+    width: 100%;
+    max-width: 520px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(14px);
+    border-radius: 24px;
+    padding: 36px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+  }
 
-.profile-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
+  .profile-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
 
-.profile-avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 10px;
-}
+  .profile-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 auto 16px;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
 
-.role-badge {
-  display: inline-block;
-  background-color: #ffba5a;
-  color: white;
-  padding: 5px 12px;
-  border-radius: 999px;
-  font-size: 13px;
-  margin-top: 8px;
-}
+  .profile-name {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: white;
+  }
 
-.profile-body h4 {
-  margin-bottom: 20px;
-  font-weight: 600;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
-}
+  .profile-email {
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 12px;
+  }
 
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
-  color: #555;
-}
+  .role-badge {
+    display: inline-block;
+    background: #f59e0b;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+  }
 
-.btn {
-  width: 100%;
-}
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    color: white;
+  }
 
-            `
-        }
-    </style>
-    <div className="profile-container">
-      <div className="profile-card" data-aos="fade-up">
-        <div className="profile-header">
-          <img src="https://i.pravatar.cc/100" alt="Avatar" className="profile-avatar" />
-          <h2>{user.name}</h2>
-          <p>{user.email}</p>
-          <span className="role-badge">{user.role?.join(', ')}</span>
-        </div>
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    color: white;
+  }
 
-        <div className="profile-body">
-          <h4>Account Details</h4>
-          <div className="detail-row">
-            <span>Name:</span>
-            <span>{user.name}</span>
+  .detail-label {
+    font-weight: 600;
+  }
+
+  .detail-value {
+    color: rgba(255,255,255,0.8);
+  }
+`}</style>
+
+      <div className="profile-page">
+        <div className="profile-card">
+          <div className="profile-header">
+            <div className="profile-avatar">
+              {initials}
+            </div>
+
+            <div className="profile-name">
+              {user.name}
+            </div>
+
+            <div className="profile-email">
+              {user.email}
+            </div>
+
+            <span className="role-badge">
+              {user.role?.join(', ')}
+            </span>
           </div>
-          <div className="detail-row">
-            <span>Email:</span>
-            <span>{user.email}</span>
+
+          <div>
+            <div className="section-title">
+              Account Details
+            </div>
+
+            <div className="detail-row">
+              <span className="detail-label">
+                Name
+              </span>
+              <span className="detail-value">
+                {user.name}
+              </span>
+            </div>
+
+            <div className="detail-row">
+              <span className="detail-label">
+                Email
+              </span>
+              <span className="detail-value">
+                {user.email}
+              </span>
+            </div>
+
+            <div className="detail-row">
+              <span className="detail-label">
+                Role
+              </span>
+              <span className="detail-value">
+                {user.role?.join(', ')}
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </>
   );
 };
