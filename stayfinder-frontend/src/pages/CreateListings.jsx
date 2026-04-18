@@ -82,23 +82,36 @@ const CreateListing = () => {
 
   // Submit listing with images
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const token = localStorage.getItem('token');
-      await API.post(
-        '/listings',
-        { ...formData, price: Number(formData.price),
-    totalRooms: Number(formData.totalRooms), images },
-        { headers: { Authorization: `Bearer ${token}`,  'Content-Type': 'application/json', } }
-      );
-      navigate('/my-listings', {
-  state: { toast: { type: 'success', message: 'Listing created successfully!' } }
-});
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create listing');
-    }
-  };
+  if (images.length === 0) {
+    setError("Please wait for image upload to complete");
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem('token');
+
+    await API.post('/listings', {
+      ...formData,
+      price: Number(formData.price),
+      totalRooms: Number(formData.totalRooms),
+      images
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    navigate('/my-listings', {
+      state: { toast: { type: 'success', message: 'Listing created successfully!' } }
+    });
+
+  } catch (err) {
+    setError(err.response?.data?.message || 'Failed to create listing');
+  }
+};
 
   return (
   <div
@@ -367,7 +380,7 @@ const CreateListing = () => {
         <button
           className="btn w-100"
           type="submit"
-          disabled={uploading}
+          disabled={uploading || images.length === 0}
           style={{
             background: 'white',
             color: 'black',

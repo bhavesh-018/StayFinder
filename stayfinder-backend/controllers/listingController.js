@@ -8,7 +8,7 @@ exports.createListing = async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    if (!req.files || req.files.length === 0) {
+    if (!req.body.images || req.body.images.length === 0) {
       return res.status(400).json({ message: 'At least one image is required' });
     }
 
@@ -16,7 +16,7 @@ exports.createListing = async (req, res) => {
       return res.status(400).json({ message: 'totalRooms must be at least 1' });
     }
 
-    const imagePaths = req.files.map(file => file.path || file.secure_url);
+    const imagePaths = req.body.images;
     const listing = new Listing({
       title,
       description,
@@ -49,6 +49,8 @@ exports.getListingById = async (req, res) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 3;
 
+    const { checkIn, checkOut } = req.query;
+
     const listing = await Listing.findById(req.params.id)
       .populate('owner', 'name email')
       .populate('reviews.user', 'name');
@@ -57,6 +59,29 @@ exports.getListingById = async (req, res) => {
       return res.status(404).json({ message: 'Listing not found' });
     }
 
+    // 🔥 AVAILABILITY CALCULATION
+    let availableRooms = listing.totalRooms;
+
+    if (checkIn && checkOut) {
+      const startDate = new Date(checkIn);
+      const endDate = new Date(checkOut);
+
+      const activeBookings = await Booking.find({
+        listing: listing._id,
+        status: { $in: ['PENDING', 'CONFIRMED'] },
+        checkIn: { $lt: endDate },
+        checkOut: { $gt: startDate }
+      });
+
+      const roomsHeld = activeBookings.reduce(
+        (sum, b) => sum + (b.roomsBooked || 1),
+        0
+      );
+
+      availableRooms = listing.totalRooms - roomsHeld;
+    }
+
+    // 🔥 REVIEW PAGINATION (unchanged)
     const totalReviews = listing.reviews.length;
 
     const start = (page - 1) * limit;
@@ -70,6 +95,7 @@ exports.getListingById = async (req, res) => {
 
     res.json({
       ...listing.toObject(),
+      availableRooms,
       reviews: paginatedReviews,
       totalReviews,
       totalPages: Math.max(1, Math.ceil(totalReviews / limit)),

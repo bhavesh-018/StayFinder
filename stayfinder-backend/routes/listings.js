@@ -18,7 +18,7 @@ const upload = require('../middleware/cloudinaryStorage');
 router.get('/', getAllListings);
 router.get('/my-listings', verifyToken, authorizeRoles('host'), getListingsByOwner);
 router.get('/:id', getListingById);
-router.post('/', verifyToken, authorizeRoles('host'), upload.array('images', 5), createListing);
+router.post('/', verifyToken, authorizeRoles('host'), createListing);
 router.put('/:id', verifyToken, authorizeRoles('host'), updateListing);
 router.delete('/:id', verifyToken, authorizeRoles('host'), deleteListing);
 router.post('/:id/reviews', verifyToken, addReview);

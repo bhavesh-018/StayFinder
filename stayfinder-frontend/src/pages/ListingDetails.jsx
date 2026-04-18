@@ -242,7 +242,7 @@ const ListingDetails = () => {
     } catch (err) {
       console.log(err);
     }
-};
+  };
 
   const openLightbox = (index) => {
     setCurrentImageIndex(index);
@@ -364,13 +364,8 @@ const ListingDetails = () => {
         <i className="fa fa-map-marker-alt text-danger me-2"></i>
         {listing.location}
       </p>
-      <p className="text-muted mb-0 mt-1" style={{ fontSize: '15px' }}>
-        <i className="fa fa-door-open text-primary me-2"></i>
-        {listing.totalRooms} room{listing.totalRooms > 1 ? 's' : ''} available
-      </p>
 
     </div>
-
 
     {/* Divider */}
     <hr className="my-4" />

@@ -39,12 +39,6 @@ const listingSchema = new mongoose.Schema({
     default: 1,
     min: 1
   },
-  availableRooms: {
-    type: Number,
-    default: function () {
-      return this.totalRooms;
-    }
-  },
   isAvailableForUpdate: {
     type: Boolean,
     default: true, 
