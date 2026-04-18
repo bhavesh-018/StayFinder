@@ -101,20 +101,18 @@ const ListingsPage = () => {
 
   return (
     <div
-      className="container mt-5"
+      className="container"
       style={{
-        marginTop: '140px'
+        paddingTop: '100px',
       }}
     >
       <div className="row">
         {/* Left: Filters */}
         <div
           className="col-lg-4 mb-4"
-          style={{
-            marginTop: '95px'
-          }}
         >
           <AvailabilityForm
+            initialSearchTerm={searchTerm}
             initialCity={
               searchLocation
             }
@@ -136,9 +134,6 @@ const ListingsPage = () => {
         {/* Right: Listings */}
         <div
           className="col-lg-8"
-          style={{
-            marginTop: '40px'
-          }}
         >
           <div className="d-flex align-items-center justify-content-between mb-4">
             <h4 className="fw-bold text-light">

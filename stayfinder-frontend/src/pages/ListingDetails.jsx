@@ -192,12 +192,12 @@ const ListingDetails = () => {
   }, [showAllAmenities]);
 
   const formatDate = (date) => {
-  return date.toISOString().split('T')[0];  // "2025-06-18"
+  return date.toISOString().split('T')[0];
 };
 
   const handleBooking = async ({ checkIn, checkOut, rooms }) => {
     try {
-      await API.post(
+      const res = await API.post(
         '/bookings',
         {
           listingId: id,
@@ -209,8 +209,10 @@ const ListingDetails = () => {
           headers: { Authorization: `Bearer ${token}` }
         }
       );
-      localStorage.setItem('bookingSuccess', 'Your booking was successful!');
-      navigate('/bookings');
+      const bookingId = res.data._id;
+
+    // 🔥 redirect to payment page
+    navigate(`/payment/${bookingId}`);
     } catch (err) {
       setToast(err.response?.data?.message || 'Booking failed');
       console.log(err);
@@ -251,7 +253,66 @@ const ListingDetails = () => {
   if (!listing) return <div className="container mt-5">Loading...</div>;
 
   return (
-    <div className="container listing-details-page" style={{marginTop: '100px'}}>
+    <>
+<style>{`
+@media (max-width: 768px) {
+
+  /* Fix image grid */
+  .image-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .side-images {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: none !important;
+    gap: 6px;
+  }
+
+  .side-images img {
+    height: 90px !important;
+  }
+
+  /* Remove left spacing */
+  .listing-details-page .col-md-7 .card {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Reviews card fix */
+  .listing-details-page .col-md-7 .card .card {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Right section full width */
+  .listing-details-page .col-md-5 .card {
+    width: 100% !important;
+  }
+
+  /* Stack layout */
+  .listing-details-bottom .row {
+    flex-direction: column;
+  }
+
+  /* Booking button full width */
+  .listing-details-page button.btn-primary {
+    width: 100%;
+  }
+
+  /* Reduce title size slightly */
+  .listing-details-page h2 {
+    font-size: 20px !important;
+  }
+
+  /* Reduce padding */
+  .listing-details-page .card {
+    padding: 16px !important;
+  }
+
+}
+`}</style>
+    <div className="container listing-details-page" style={{ paddingTop: '100px' }}>
       {/* Image Grid */}
       <div className="image-grid mb-4">
         <div className="main-image position-relative" onClick={() => openLightbox(0)}>
@@ -582,6 +643,7 @@ const ListingDetails = () => {
       maxRooms={listing.totalRooms} 
       />
     </div>
+    </>
   );
   
 };

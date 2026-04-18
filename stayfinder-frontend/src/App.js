@@ -15,6 +15,7 @@ import ResetPassword from './pages/ResetPassword';
 import EditListing from './pages/EditListing';
 import BecomeHost from './pages/BecomeHost';
 import HostDashboard from './pages/HostDashboard';
+import PaymentPage from './pages/PaymentPage';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path='/listings/edit/:id' element={<EditListing />} />
         <Route path="/become-host" element={<BecomeHost />} />
         <Route path="/host-dashboard" element={<HostDashboard />} />
+        <Route path="/payment/:id" element={<PaymentPage />} />
       </Routes>
     </Router>
     </>

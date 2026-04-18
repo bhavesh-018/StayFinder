@@ -26,7 +26,7 @@ const ListingsSection = () => {
     <section className="section">
       <div className="container">
         <h2 className="heading">Recently Featured Stays</h2>
-        <div className="row" style={{marginTop: '70px'}}>
+        <div className="row" style={{marginTop: '90px'}}>
           {listings.map(listing => (
             <div className="col-md-4" key={listing._id}>
               <div className="card">

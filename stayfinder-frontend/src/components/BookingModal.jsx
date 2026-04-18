@@ -1,4 +1,3 @@
-// components/BookingModal.jsx
 import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
@@ -11,14 +10,14 @@ const BookingModal = ({ show, onClose, onConfirm, maxRooms }) => {
 
   const handleSubmit = () => {
     if (!checkIn || !checkOut) {
-    alert("Please select valid dates");
-    return;
-  }
+      alert("Please select valid dates");
+      return;
+    }
 
-  if (rooms < 1 || rooms > maxRooms) {
-    alert(`You can book up to ${maxRooms} rooms`);
-    return;
-  }
+    if (rooms < 1 || rooms > maxRooms) {
+      alert(`You can book up to ${maxRooms} rooms`);
+      return;
+    }
     onConfirm({ checkIn, checkOut, rooms });
     onClose();
   };

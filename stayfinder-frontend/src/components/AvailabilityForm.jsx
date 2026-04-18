@@ -8,6 +8,7 @@ import Toast from './Toast';
 import { Link } from 'react-router-dom';
 
 const AvailabilityForm = ({
+  initialSearchTerm = '',
   initialCity = '',
   initialCheckIn = null,
   initialCheckOut = null,
