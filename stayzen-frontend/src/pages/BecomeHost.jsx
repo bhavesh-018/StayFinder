@@ -87,7 +87,7 @@ const BecomeHost = () => {
           }}
         >
           Turn your property into income. Start listing your space,
-          manage bookings, and grow your hosting business with StayFinder.
+          manage bookings, and grow your hosting business with Stayzen.
         </p>
 
         <div style={{ marginBottom: '30px' }}>

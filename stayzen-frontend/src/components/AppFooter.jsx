@@ -1,6 +1,6 @@
 const Footer = () => (
   <footer className="bg-gray-800 text-black text-center p-4">
-    &copy; {new Date().getFullYear()} StayFinder. All rights reserved.
+    &copy; {new Date().getFullYear()} Stayzen. All rights reserved.
   </footer>
 );
 

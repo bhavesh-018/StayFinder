@@ -48,7 +48,7 @@ const PaymentPage = () => {
         key: process.env.REACT_APP_RAZORPAY_KEY_ID,
         amount: order.amount,
         currency: order.currency,
-        name: "StayFinder",
+        name: "Stayzen",
         order_id: order.id,
 
         handler: async function (response) {

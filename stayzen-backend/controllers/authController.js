@@ -87,7 +87,7 @@ exports.forgotPassword = async (req, res) => {
     // Send the email
     await transporter.sendMail({
       to: email,
-      from: '"StayFinder" <no-reply@stayfinder.com>',
+      from: '"Stayzen" <no-reply@stayzen.com>',
       subject: "Reset Your Password",
       html: `
         <p>Hello ${user.name || ''},</p>
