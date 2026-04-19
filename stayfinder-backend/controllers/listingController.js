@@ -1,4 +1,5 @@
 const Listing = require('../models/Listing');
+const { client } = require("../config/redis");
 const NodeGeocoder = require("node-geocoder");
 
 const geocoder = NodeGeocoder({
@@ -44,6 +45,7 @@ exports.createListing = async (req, res) => {
     });
 
     await listing.save();
+    await client.del("listings:all");
     res.status(201).json(listing);
 
   } catch (err) {
@@ -54,7 +56,21 @@ exports.createListing = async (req, res) => {
 
 exports.getAllListings = async (req, res) => {
   try {
+    const cacheKey = "listings:all";
+
+    // Check Redis
+    const cached = await client.get(cacheKey);
+
+    if (cached) {
+      console.log("⚡ Redis HIT - all listings");
+      return res.json(JSON.parse(cached));
+    }
+
     const listings = await Listing.find().populate('owner', 'name email');
+
+    await client.setEx(cacheKey, 300, JSON.stringify(listings));
+
+    console.log("🐢 Mongo HIT - cached");
     res.json(listings);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
@@ -62,6 +78,15 @@ exports.getAllListings = async (req, res) => {
 };
 exports.getListingById = async (req, res) => {
   try {
+    const cacheKey = `listing:${req.params.id}`;
+
+    const cached = await client.get(cacheKey);
+
+    if (cached) {
+      console.log("⚡ Redis HIT - single listing");
+      return res.json(JSON.parse(cached));
+    }
+
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 3;
 
@@ -75,7 +100,6 @@ exports.getListingById = async (req, res) => {
       return res.status(404).json({ message: 'Listing not found' });
     }
 
-    // 🔥 AVAILABILITY CALCULATION
     let availableRooms = listing.totalRooms;
 
     if (checkIn && checkOut) {
@@ -97,7 +121,6 @@ exports.getListingById = async (req, res) => {
       availableRooms = listing.totalRooms - roomsHeld;
     }
 
-    // 🔥 REVIEW PAGINATION (unchanged)
     const totalReviews = listing.reviews.length;
 
     const start = (page - 1) * limit;
@@ -109,14 +132,18 @@ exports.getListingById = async (req, res) => {
 
     const paginatedReviews = sortedReviews.slice(start, end);
 
-    res.json({
+    const responseData = {
       ...listing.toObject(),
       availableRooms,
       reviews: paginatedReviews,
       totalReviews,
       totalPages: Math.max(1, Math.ceil(totalReviews / limit)),
       currentPage: page
-    });
+    };
+
+    await client.setEx(cacheKey, 60, JSON.stringify(responseData));
+
+    res.json(responseData);
 
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
@@ -134,6 +161,8 @@ exports.getListingsByOwner = async (req, res) => {
 
 exports.updateListing = async (req, res) => {
   try {
+
+    const { title, description, location, price, totalRooms, amenities} = req.body;
     const listing = await Listing.findById(req.params.id);
 
     if (!listing) {
@@ -165,8 +194,6 @@ exports.updateListing = async (req, res) => {
       }
     }
 
-    // Update fields from req.body
-    const { title, description, location, price, totalRooms, amenities} = req.body;
     if (title) listing.title = title;
     if (description) listing.description = description;
     if (location) listing.location = location;
@@ -181,6 +208,8 @@ exports.updateListing = async (req, res) => {
     }
 
     await listing.save();
+    await client.del("listings:all");
+    await client.del(`listing:${req.params.id}`);
     res.json(listing);
   } catch (err) {
     console.error('❌ Error updating listing:', err);
@@ -199,6 +228,8 @@ exports.deleteListing = async (req, res) => {
     }
 
     await listing.deleteOne();
+    await client.del("listings:all");
+    await client.del(`listing:${req.params.id}`);
     res.json({ message: 'Listing deleted successfully' });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });

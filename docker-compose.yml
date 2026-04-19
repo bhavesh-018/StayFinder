@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: ./stayfinder-backend
+    container_name: backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/stayfinder
+      - REDIS_HOST=redis://redis:6379
+    volumes:
+      - ./stayfinder-backend:/app
+    command: sh -c "node seedRunner.js && npm run dev"
+
+  frontend:
+    build: ./stayfinder-frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./stayfinder-frontend:/app
+
+volumes:
+  mongo_data:

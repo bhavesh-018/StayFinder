@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { faker } = require("@faker-js/faker");
 
 const Listing = require("../models/Listing");
 const User = require("../models/User");
@@ -10,51 +9,7 @@ const geocoder = NodeGeocoder({
   provider: "openstreetmap",
 });
 
-mongoose.connect("mongodb://127.0.0.1:27017/stayfinder");
-
-const IMAGE_POOL = [
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774597804/stayfinder/listings/d5tq3s9pyf5ti0egutzh.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774597803/stayfinder/listings/lxqfkzl0oftuozufdb1z.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774597803/stayfinder/listings/ibyurieyosxapy08xrn9.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774597109/stayfinder/listings/ltdgy8hk9okmramqq89g.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774597803/stayfinder/listings/zcuglte2oqgnqy4hek9x.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774597108/stayfinder/listings/h6dmxyf4kc5mj2oluttp.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774597108/stayfinder/listings/wfab5vn4h9x8lbt0be10.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774456679/img7_lrzymd.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774456678/img6_cgsvel.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774456677/img5_we3y28.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774456675/img3_c8xf56.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1770971642/img4_nkvzbj.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1770971634/img2_uiqbtv.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1770971634/img2_uiqbtv.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1750336032/hosteller3_s5izil.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1750335783/oberoi4_gitxvz.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1750335780/oberoi1_stil9w.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1750335781/oberoi2_dq8bsv.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1750335784/oberoi5_izslug.jpg",
-  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1750336033/hosteller4_fq5n1i.jpg"
-];
-
-const LOCATIONS = [
-  "Mumbai","Delhi","Bangalore","Pune","Goa",
-  "Hyderabad","Chennai","Jaipur","Kolkata","Ahmedabad"
-];
-
-const AMENITIES = [
-  "Free Wi-Fi","Air Conditioning","Parking","Swimming Pool",
-  "Gym","Kitchen","TV","Security","Balcony","Workspace"
-];
-
-// 🔥 better titles
-const TITLE_PREFIX = [
-  "Luxury","Cozy","Modern","Spacious","Elegant",
-  "Budget","Premium","Comfortable","Stylish","Peaceful"
-];
-
-const PROPERTY_TYPE = [
-  "Apartment","Villa","Studio","Loft","Suite","Homestay"
-];
-
+// 🌍 Cache to avoid repeated API calls
 const locationCache = {};
 
 const getCoordinates = async (location) => {
@@ -79,9 +34,56 @@ const getCoordinates = async (location) => {
   return null;
 };
 
-async function seedListings() {
+// 📸 Image pool
+const IMAGE_POOL = [
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774597804/stayfinder/listings/d5tq3s9pyf5ti0egutzh.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774597803/stayfinder/listings/lxqfkzl0oftuozufdb1z.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774597803/stayfinder/listings/ibyurieyosxapy08xrn9.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774597109/stayfinder/listings/ltdgy8hk9okmramqq89g.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774597803/stayfinder/listings/zcuglte2oqgnqy4hek9x.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774597108/stayfinder/listings/h6dmxyf4kc5mj2oluttp.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774597108/stayfinder/listings/wfab5vn4h9x8lbt0be10.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774456679/img7_lrzymd.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774456678/img6_cgsvel.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774456677/img5_we3y28.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1774456675/img3_c8xf56.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1770971642/img4_nkvzbj.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1770971634/img2_uiqbtv.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1750336032/hosteller3_s5izil.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1750335783/oberoi4_gitxvz.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1750335780/oberoi1_stil9w.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1750335781/oberoi2_dq8bsv.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1750335784/oberoi5_izslug.jpg",
+  "https://res.cloudinary.com/dyyhyjxkz/image/upload/v1750336033/hosteller4_fq5n1i.jpg"
+];
+
+// 🌍 Locations
+const LOCATIONS = [
+  "Mumbai", "Delhi", "Bangalore", "Pune", "Goa",
+  "Hyderabad", "Chennai", "Jaipur", "Kolkata", "Ahmedabad"
+];
+
+// 🏡 Amenities
+const AMENITIES = [
+  "Free Wi-Fi", "Air Conditioning", "Parking", "Swimming Pool",
+  "Gym", "Kitchen", "TV", "Security", "Balcony", "Workspace"
+];
+
+// 🧠 Titles
+const TITLE_PREFIX = [
+  "Luxury", "Cozy", "Modern", "Spacious", "Elegant",
+  "Budget", "Premium", "Comfortable", "Stylish", "Peaceful"
+];
+
+const PROPERTY_TYPE = [
+  "Apartment", "Villa", "Studio", "Loft", "Suite", "Homestay"
+];
+
+// 🚀 MAIN SEED FUNCTION
+const seedListings = async () => {
+  const { faker } = await import('@faker-js/faker');
   try {
-    console.log("Seeding listings...");
+    console.log("🌱 Seeding listings...");
 
     await Listing.deleteMany();
 
@@ -112,7 +114,6 @@ async function seedListings() {
 
         const reviewCount = faker.number.int({ min: 1, max: 5 });
         const reviews = [];
-
         let totalRating = 0;
 
         for (let r = 0; r < reviewCount; r++) {
@@ -121,7 +122,7 @@ async function seedListings() {
           reviews.push({
             user: getRandomGuest(),
             rating,
-            comment: faker.lorem.sentence()
+            comment: faker.lorem.sentence(),
           });
 
           totalRating += rating;
@@ -129,7 +130,7 @@ async function seedListings() {
 
         const averageRating = Math.round(totalRating / reviewCount);
 
-        // 🔥 ADD THIS PART
+        // 📍 Generate spread coordinates
         let coordinates = null;
 
         if (baseCoords) {
@@ -151,19 +152,17 @@ async function seedListings() {
           averageRating,
           reviews,
           isAvailableForUpdate: true,
-          coordinates, // ✅ ADD THIS
+          coordinates,
         });
       }
     }
 
     await Listing.insertMany(listings);
 
-    console.log("✅ 200 listings with reviews inserted");
-    process.exit();
+    console.log("✅ 200 listings with coordinates inserted");
   } catch (error) {
-    console.error("❌ Error:", error);
-    process.exit(1);
+    console.error("❌ Error seeding listings:", error);
   }
 }
 
-seedListings();
+module.exports = seedListings;
