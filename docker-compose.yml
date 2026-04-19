@@ -15,7 +15,7 @@ services:
       - "6379:6379"
 
   backend:
-    build: ./stayfinder-backend
+    build: ./stayzen-backend
     container_name: backend
     ports:
       - "5000:5000"
@@ -26,18 +26,18 @@ services:
       - MONGO_URI=mongodb://mongo:27017/stayfinder
       - REDIS_HOST=redis://redis:6379
     volumes:
-      - ./stayfinder-backend:/app
+      - ./stayzen-backend:/app
     command: sh -c "node seedRunner.js && npm run dev"
 
   frontend:
-    build: ./stayfinder-frontend
+    build: ./stayzen-frontend
     container_name: frontend
     ports:
       - "3000:3000"
     depends_on:
       - backend
     volumes:
-      - ./stayfinder-frontend:/app
+      - ./stayzen-frontend:/app
 
 volumes:
   mongo_data:
