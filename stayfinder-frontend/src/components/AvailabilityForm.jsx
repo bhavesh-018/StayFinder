@@ -296,17 +296,6 @@ const AvailabilityForm = ({
             Check Availability
           </button>
         </div>
-
-        {isHost && (
-          <div className="col-lg-4 mt-2 mt-lg-0">
-            <Link
-              to="/listings/create"
-              className="btn btn-outline-warning w-100 fw-bold"
-            >
-              + Create Listing
-            </Link>
-          </div>
-        )}
       </div>
     </>
   )}

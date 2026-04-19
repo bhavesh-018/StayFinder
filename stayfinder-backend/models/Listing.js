@@ -52,7 +52,15 @@ const listingSchema = new mongoose.Schema({
   averageRating: {
     type: Number,
     default: 0
-  }
+  },
+  coordinates: {
+    lat: {
+      type: Number,
+    },
+    lng: {
+      type: Number,
+    }
+  },
 }, { timestamps: true });
 
 listingSchema.index({ location: 1, price: 1 });

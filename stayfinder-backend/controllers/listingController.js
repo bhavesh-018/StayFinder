@@ -1,4 +1,9 @@
 const Listing = require('../models/Listing');
+const NodeGeocoder = require("node-geocoder");
+
+const geocoder = NodeGeocoder({
+  provider: "openstreetmap",
+});
 
 exports.createListing = async (req, res) => {
   try {
@@ -8,33 +13,44 @@ exports.createListing = async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    if (!req.body.images || req.body.images.length === 0) {
+    if (!images || images.length === 0) {
       return res.status(400).json({ message: 'At least one image is required' });
     }
 
-    if (totalRooms && totalRooms < 1) {
-      return res.status(400).json({ message: 'totalRooms must be at least 1' });
+    let coordinates = null;
+
+    try {
+      const geoData = await geocoder.geocode(location);
+
+      if (geoData.length > 0) {
+        coordinates = {
+          lat: geoData[0].latitude,
+          lng: geoData[0].longitude,
+        };
+      }
+    } catch (geoErr) {
+      console.log("Geocoding failed:", geoErr.message);
     }
 
-    const imagePaths = req.body.images;
     const listing = new Listing({
       title,
       description,
       location,
       price,
-      images: imagePaths,
+      images,
       totalRooms: totalRooms || 1,
       owner: req.user._id,
+      coordinates,
     });
 
     await listing.save();
     res.status(201).json(listing);
+
   } catch (err) {
     console.error('Create Listing Error:', err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
-
 
 exports.getAllListings = async (req, res) => {
   try {
@@ -130,6 +146,23 @@ exports.updateListing = async (req, res) => {
       console.log(req.user.toString());
       console.log(listing.owner.toString() === req.user.toString());
       return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    if (location && location !== listing.location) {
+      listing.location = location;
+
+      try {
+        const geoData = await geocoder.geocode(location);
+
+        if (geoData.length > 0) {
+          listing.coordinates = {
+            lat: geoData[0].latitude,
+            lng: geoData[0].longitude,
+          };
+        }
+      } catch (err) {
+        console.log("Geocode update failed");
+      }
     }
 
     // Update fields from req.body
