@@ -215,3 +215,39 @@ exports.cancelBooking = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+exports.getHostBookings = async (req, res) => {
+  try {
+    const hostId = req.user.id || req.user;
+
+    // Step 1: get all listings of this host
+    const listings = await Listing.find({ owner: hostId });
+
+    const listingIds = listings.map(l => l._id);
+
+    // Step 2: get bookings on those listings
+    const bookings = await Booking.find({
+      listing: { $in: listingIds }
+    })
+      .populate("listing")
+      .populate("user");
+
+    const formatted = bookings.map(b => ({
+      _id: b._id,
+      status: b.status,
+      listing: b.listing,
+      user: b.user,
+      checkIn: b.checkIn ? formatDate(b.checkIn) : null,
+      checkOut: b.checkOut ? formatDate(b.checkOut) : null,
+      price: b.price,
+      roomsBooked: b.roomsBooked,
+      createdAt: formatDate(b.createdAt),
+      updatedAt: formatDate(b.updatedAt)
+    }));
+
+    res.json(formatted);
+
+  } catch (err) {
+    console.error("❌ ERROR in getHostBookings:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};

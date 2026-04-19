@@ -111,11 +111,6 @@ const HostDashboard = () => {
               onClick={() => navigate('/host-bookings')}
             />
 
-            <DashboardCard
-              title="Earnings"
-              subtitle="View revenue and payouts"
-              onClick={() => navigate('/earnings')}
-            />
           </div>
         </div>
       </div>

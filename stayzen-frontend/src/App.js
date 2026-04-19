@@ -16,6 +16,7 @@ import EditListing from './pages/EditListing';
 import BecomeHost from './pages/BecomeHost';
 import HostDashboard from './pages/HostDashboard';
 import PaymentPage from './pages/PaymentPage';
+import HostBookings from './pages/HostBookings';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         <Route path="/become-host" element={<BecomeHost />} />
         <Route path="/host-dashboard" element={<HostDashboard />} />
         <Route path="/payment/:id" element={<PaymentPage />} />
+        <Route path="/host-bookings" element={<HostBookings />} />
       </Routes>
     </Router>
     </>

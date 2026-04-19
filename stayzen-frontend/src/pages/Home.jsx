@@ -23,7 +23,6 @@ const Home = () => {
     const fetchListings = async () => {
       try {
         const res = await API.get("/listings");
-        console.log("API data:", res.data);
         setListings(res.data);
       } catch (err) {
         console.error("Error fetching listings:", err);
