@@ -40,7 +40,7 @@ const ListingDetails = () => {
       bg: "bg-primary-subtle"
     },
     "Air Conditioning": {
-      icon: "fa-snowflake",
+      icon: "fa-snowflake-o",
       color: "text-info",
       bg: "bg-info-subtle"
     },
@@ -65,22 +65,22 @@ const ListingDetails = () => {
       bg: "bg-warning-subtle"
     },
     "24/7 Front Desk": {
-      icon: "fa-concierge-bell",
+      icon: "fa-bell",
       color: "text-warning",
       bg: "bg-warning-subtle"
     },
     "Swimming Pool": {
-      icon: "fa-swimmer",
+      icon: "fa-life-ring",
       color: "text-primary",
       bg: "bg-primary-subtle"
     },
     "Gym": {
-      icon: "fa-dumbbell",
+      icon: "fa-heartbeat",
       color: "text-danger",
       bg: "bg-danger-subtle"
     },
     "Laundry Service": {
-      icon: "fa-soap",
+      icon: "fa-refresh",
       color: "text-info",
       bg: "bg-info-subtle"
     },
@@ -95,7 +95,7 @@ const ListingDetails = () => {
       bg: "bg-success-subtle"
     },
     "Airport Shuttle": {
-      icon: "fa-shuttle-van",
+      icon: "fa-bus",
       color: "text-info",
       bg: "bg-info-subtle"
     },
@@ -105,12 +105,12 @@ const ListingDetails = () => {
       bg: "bg-secondary-subtle"
     },
     "Bar": {
-      icon: "fa-glass-martini-alt",
+      icon: "fa-glass-martini",
       color: "text-danger",
       bg: "bg-danger-subtle"
     },
     "Spa": {
-      icon: "fa-spa",
+      icon: "fa-leaf",
       color: "text-success",
       bg: "bg-success-subtle"
     },
@@ -130,7 +130,7 @@ const ListingDetails = () => {
       bg: "bg-secondary-subtle"
     },
     "Kitchen": {
-      icon: "fa-kitchen-set",
+      icon: "fa-utensils",
       color: "text-warning",
       bg: "bg-warning-subtle"
     },
@@ -140,27 +140,27 @@ const ListingDetails = () => {
       bg: "bg-info-subtle"
     },
     "Sea View": {
-      icon: "fa-water",
+      icon: "fa-tint",
       color: "text-primary",
       bg: "bg-primary-subtle"
     },
     "Mountain View": {
-      icon: "fa-mountain",
+      icon: "fa-tree",
       color: "text-success",
       bg: "bg-success-subtle"
     },
     "Workspace": {
-      icon: "fa-laptop",
+      icon: "fa-desktop",
       color: "text-dark",
       bg: "bg-light"
     },
     "Security": {
-      icon: "fa-shield-alt",
+      icon: "fa-shield",
       color: "text-danger",
       bg: "bg-danger-subtle"
     },
     "Housekeeping": {
-      icon: "fa-broom",
+      icon: "fa-home",
       color: "text-secondary",
       bg: "bg-secondary-subtle"
     }
@@ -255,6 +255,43 @@ const ListingDetails = () => {
   return (
     <>
 <style>{`
+.custom-modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+}
+
+.custom-backdrop {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+}
+
+.custom-modal-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 700px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #111;
+  border-radius: 16px;
+  padding: 20px;
+  z-index: 10000;
+}
+
+.custom-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
 @media (max-width: 768px) {
 
   /* Fix image grid */
@@ -607,7 +644,7 @@ const ListingDetails = () => {
             };
             return (
               <div key={index} className="col-md-6">
-                <div className="amenity-modal-item d-flex align-items-center gap-3 p-3">
+                <div className="amenity-modal-item d-flex align-items-center p-3" style={{gap: '15px'}}>
                   <div className="amenity-icon-box">
                     <i className={`fa ${config.icon} ${config.color}`}></i>
                   </div>
