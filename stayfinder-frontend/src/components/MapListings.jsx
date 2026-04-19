@@ -9,6 +9,8 @@ const MapListings = ({ listings = [] }) => {
   const [geoListings, setGeoListings] = useState([]);
   const [center, setCenter] = useState([20.5937, 78.9629]);
   const navigate = useNavigate();
+  const [userLocation, setUserLocation] = useState(null);
+  const [zoom, setZoom] = useState(6);
 
   // 🎯 Price marker
   const createPriceIcon = (price) =>
@@ -19,7 +21,6 @@ const MapListings = ({ listings = [] }) => {
       iconAnchor: [30, 30],
     });
 
-  // 📍 Load listings with coordinates
   useEffect(() => {
     if (!listings.length) return;
 
@@ -27,20 +28,72 @@ const MapListings = ({ listings = [] }) => {
       (l) => l.coordinates?.lat && l.coordinates?.lng
     );
 
-    setGeoListings(valid);
-
-    if (valid.length > 0) {
-      setCenter([valid[0].coordinates.lat, valid[0].coordinates.lng]);
+    if (userLocation) {
+      setCenter(userLocation);
+      setZoom(11);
     }
-  }, [listings]);
 
-  // 📍 Recenter map
+    if (userLocation) {
+      const nearby = valid.filter((l) => {
+        const d = getDistance(
+          userLocation[0],
+          userLocation[1],
+          l.coordinates.lat,
+          l.coordinates.lng
+        );
+        return d <= 10;
+      });
+
+      // If nothing nearby → fallback to all
+      setGeoListings(nearby.length > 0 ? nearby : valid);
+      setCenter(userLocation);
+    } else {
+      // No location → show all
+      setGeoListings(valid);
+
+      if (valid.length > 0) {
+        setCenter([valid[0].coordinates.lat, valid[0].coordinates.lng]);
+      }
+    }
+  }, [listings, userLocation]);
+
   const Recenter = ({ center }) => {
     const map = useMap();
     useEffect(() => {
-      map.setView(center, 6);
-    }, [center]);
+      map.flyTo(center, zoom, {
+        duration: 1.5,
+      });
+    }, [center, zoom]);
     return null;
+  };
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setUserLocation([
+          pos.coords.latitude,
+          pos.coords.longitude,
+        ]);
+      },
+      (err) => {
+        console.log("Location denied or unavailable");
+        setUserLocation(null);
+      }
+    );
+  }, []);
+
+  const getDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) ** 2;
+
+    return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   };
 
   return (
@@ -61,7 +114,7 @@ const MapListings = ({ listings = [] }) => {
             zoom={6}
             style={{ height: "100%", width: "100%" }}
           >
-            <Recenter center={center} />
+            <Recenter center={center} zoom={zoom} />
 
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
