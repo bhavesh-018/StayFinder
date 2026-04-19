@@ -658,7 +658,6 @@ const ListingDetails = () => {
     </div>
   </div>
 )}
-
       {/* Lightbox Integration */}
       {lightboxOpen && (
         <Lightbox
