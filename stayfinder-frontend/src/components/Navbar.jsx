@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import ProfileDropdown from './ProfileDropdown';
 import { useEffect, useState } from 'react';
+import logo from '../assets/logo.png';
 
 const Navbar = () => {
   const location = useLocation();
@@ -31,8 +32,6 @@ const Navbar = () => {
     : {
         background: 'transparent',
       };
-
-  const textColor = 'white';
 
   return (
     <>
@@ -135,7 +134,29 @@ const Navbar = () => {
                   textDecoration: 'none',
                 }}
               >
-                StayFinder
+                <img
+                  src={logo}
+                  alt="Stayzen"
+                  style={{
+                    height: '57px',
+                    width: 'auto',
+                    objectFit: 'contain',
+                    marginTop: '-4px',
+                    marginLeft: '4px',
+                  }}
+                />
+
+                <span
+                  style={{
+                    color: '#fff',
+                    fontWeight: '600',
+                    fontSize: '24px',
+                    letterSpacing: '0.9px',
+                    marginTop: '10px',
+                  }}
+                >
+                  Stayzen
+                </span>
               </Link>
             </div>
 

@@ -291,7 +291,7 @@ const AvailabilityForm = ({
         <div className="col-lg-4">
           <button
             type="submit"
-            className="btn btn-warning w-100 text-white fw-bold"
+            className="btn btn-block w-100 text-white fw-bold"
           >
             Check Availability
           </button>
