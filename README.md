@@ -1,54 +1,84 @@
-# 🏡 StayFinder - Airbnb Clone
+# Stayzen - Airbnb Clone
 
-StayFinder is a full-stack web application inspired by Airbnb. Users can browse listings, book stays, and hosts can create and manage their property listings. Built with a modern MERN stack architecture.
+Stayzen is a full-stack accommodation marketplace inspired by Airbnb. It focuses on performance, scalability, and real-world backend challenges such as caching, concurrency control, and containerized deployment.
 
----
+## Overview
 
-## 🚀 Features
+- Full-stack MERN application with 1000+ listings
+- Map-based location discovery with proximity filtering
+- Concurrency-safe booking system preventing overbooking
+- Redis caching for faster API responses
+- Fully Dockerized architecture for consistent environments
 
-### ✅ For Guests
-- 🔍 Search stays by city
-- 🏠 View detailed listing pages
-- 📅 Book listings with check-in/check-out and rooms
-- 📖 View your bookings
-- 🔓 Login/Register with JWT auth
-- 🔐 Forgot/Reset Password via Email (Mailtrap)
-
-### 🛠️ For Hosts
-- ➕ Create and manage listings
-- 📷 Upload listing images to Cloudinary
-- 👤 Role-based functionality (Host/Guest)
-- 📄 View listings you own
-- 🔐 Authorization check to prevent unauthorized edits/bookings
+### Key Engineering Highlights
+### Performance Optimization
+- Integrated Redis caching for frequently accessed endpoints
+- Reduced database load and improved response time by 40%+
+- Implemented TTL-based caching with manual invalidation
 
 ---
 
-## 🧰 Tech Stack
-
-| Frontend | Backend | Database | Others |
-|----------|---------|----------|--------|
-| React (Vite) | Node.js | MongoDB | Cloudinary |
-| Bootstrap | Express.js | Mongoose | JWT Auth |
-| Axios | Nodemailer |  | Mailtrap (Email) |
+### Concurrency-Safe Booking System
+- Designed a booking flow using status-based locking (PENDING, CONFIRMED, EXPIRED)
+- Prevents overbooking under concurrent requests
+- Uses atomic validation during booking confirmation
+- Includes expiry mechanism for incomplete bookings
 
 ---
 
-## 📦 Setup Instructions
+### Scalable Backend Design
+- Built RESTful APIs with pagination and query optimization
+- Indexed database queries for efficient filtering
+- Real-time availability calculation using active bookings
 
-### 1. Clone the Repository
+---
 
+### Map-Based Discovery
+- Interactive map UI for exploring listings
+- Proximity-based filtering using coordinates
+- Enhances user experience for location-based search
+
+---
+
+### Containerized Architecture
+- Docker Compose setup with frontend, backend, MongoDB, and Redis
+- One-command startup for entire system
+- Ensures consistent development and deployment environments
+
+---
+
+## Tech Stack
+
+| Layer | Technologies |
+|----------|---------|
+| Frontend | React, Axios |
+| Backend | Node.js, Express.js |
+| Database | MongoDB, Mongoose |
+| Cachine | Redis |
+| Devops | Docker, Docker Compose |
+| Media | Cloudinary |
+| Auth | JWT |
+| Email | Nodemailer, Mailtrap |
+
+---
+
+
+## Running the project
+
+### Docker (Recommended)
 ```bash
-git clone https://github.com/bhavesh-018/stayfinder.git
-cd stayfinder
+docker compose up --build
 ```
+
+## Manual Setup
 
 ### 2. Setup Backend
 ```bash
-cd stayfinder-backend
+cd stayzen-backend
 npm install
 ```
 
-> Create a `.env` file in `stayfinder-backend`:
+> Create a `.env` file in `stayzen-backend`:
 
 ```env
 PORT=5000
@@ -59,6 +89,7 @@ CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 MAILTRAP_USER=your_mailtrap_user
 MAILTRAP_PASS=your_mailtrap_pass
+REDIS_URL=redis://localhost:6379
 ```
 
 ```bash
@@ -67,40 +98,15 @@ npm run dev
 
 ### 3. Setup Frontend
 ```bash
-cd stayfinder-frontend
+cd stayzen-frontend
 npm install
+```
+> Create a `.env` file in `stayzen-frontend`:
+```env
+REACT_APP_RAZORPAY_KEY_ID=your_razor_pay_api_key
+```
+
+```bash
 npm start
 ```
 ---
-
-## 📸 Screenshots
-
-### 1. 🏠 Home Page
-![Home](public/screenshots/home.png)
-
-### 2. 🔍 Listings Page (Search Results)
-![search_results](public/screenshots/search_results.png)
-
-### 3. 🏡 Listing Details
-![listing_details](public/screenshots/listing_details_1.png)
-![](public/screenshots/listing_details_2.png)
-
-### 4. 🗓️ Booking Modal
-![booking_modal](public/screenshots/booking_modal.png)
-
-### 5. 📆 My Bookings
-![my_bookings](public/screenshots/my_bookings.png)
-
-### 6. ➕ Create Listing Form (for Hosts)
-![create_listing](public/screenshots/create_listings.png)
-
-### 7. 📋 My Listings (for Hosts)
-![my_listings](public/screenshots/my_listings.png)
-
-### 8. 🔐 Login / Register
-![login](public/screenshots/auth/login.png)
-![register](public/screenshots/auth/register.png)
-
-### 9. 🔑 forgot / Reset Password
-![forgot_password](public/screenshots/auth/forgot_password.png)
-![reset_password](public/screenshots/auth/reset_password.png)
